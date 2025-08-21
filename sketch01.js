@@ -3,8 +3,16 @@ import math from "canvas-sketch-util/math";
 import random from "canvas-sketch-util/random";
 
 const settings = {
-  dimensions: [1080, 1080],
+  dimensions: [window.innerWidth, window.innerHeight],
+  resizeCanvas: true, // permite redimensionar junto com a janela
+  scaleToView: true,
   animate: true,
+};
+
+const colors = {
+  lines: "#a9e1ff",
+  agents: "#F7CF49",
+  bg: "#FEF8EC",
 };
 
 const sketch = ({ width, height }) => {
@@ -16,7 +24,7 @@ const sketch = ({ width, height }) => {
     agents.push(new Agent(x, y));
   }
   return ({ context, width, height }) => {
-    context.fillStyle = "black";
+    context.fillStyle = colors.bg;
     context.fillRect(0, 0, width, height);
 
     for (let i = 0; i < agents.length; i++) {
@@ -29,8 +37,8 @@ const sketch = ({ width, height }) => {
 
         if (distance > 200) continue;
 
-        context.lineWidth = math.mapRange(distance, 0, 200, 13, 1);
-        context.strokeStyle = "white";
+        context.lineWidth = math.mapRange(distance, 0, 200, 10, 1);
+        context.strokeStyle = colors.lines;
         context.beginPath();
         context.moveTo(agent.pos.x, agent.pos.y);
         context.lineTo(other_agent.pos.x, other_agent.pos.y);
@@ -79,10 +87,14 @@ class Agent {
     this.pos.y += this.vel.y;
   }
 
+  getPos() {
+    console.log("x: " + this.pos.x + "y: " + this.pos.y);
+  }
+
   draw(context) {
-    // context.fillStyle = "white";
-    context.strokeStyle = "white";
-    context.lineWidth = 4;
+    // context.fillStyle = "colors.agents";
+    context.strokeStyle = colors.agents;
+    context.lineWidth = 2;
 
     context.save();
     context.translate(this.pos.x, this.pos.y);
