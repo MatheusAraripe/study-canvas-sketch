@@ -1,31 +1,11 @@
-import canvasSketch from "canvas-sketch";
+// Funções para sketch01
+
 import math from "canvas-sketch-util/math";
 import random from "canvas-sketch-util/random";
 
-const settings = {
-  dimensions: [window.innerWidth, window.innerHeight],
-  resizeCanvas: true, // permite redimensionar junto com a janela
-  scaleToView: true,
-  animate: true,
-};
-
-const colors = {
-  lines: "#434343",
-  agents: "#434343",
-  bg: "#FFFCF2",
-  grid_lines: "#C7BFA6",
-  grid_cells: "rgba(200, 200, 255, 0.3)",
-};
-
-const cellGridSize = 35;
-
-// -----------------
-// Grid
-// -----------------
-
-const drawGrid = (context, width, height, step = 50) => {
-  context.strokeStyle = colors.grid_lines;
-  context.lineWidth = 0.4;
+const drawGrid = (context, width, height, step = 50, colors) => {
+  context.strokeStyle = colors.gridLines;
+  context.lineWidth = 0.3;
 
   for (let x = 0; x <= width; x += step) {
     context.beginPath();
@@ -46,8 +26,8 @@ const drawGrid = (context, width, height, step = 50) => {
 // "Ativa" o Grid
 // -----------------
 
-const highlightGridCell = (context, agents, cellSize) => {
-  context.fillStyle = colors.grid_cells;
+const highlightGridCell = (context, agents, cellSize, colors) => {
+  context.fillStyle = colors.gridCells;
 
   agents.forEach((agent) => {
     const cellX = Math.floor(agent.pos.x / cellSize);
@@ -62,11 +42,12 @@ const highlightGridCell = (context, agents, cellSize) => {
 // -----------------
 const createVector = (x, y) => ({ x, y });
 
-const createAgent = (x, y) => ({
+const createAgent = (x, y, arryColorsLength) => ({
   pos: createVector(x, y),
   vel: createVector(random.range(-2, 2), random.range(-2, 2)),
   radius: random.range(4, 8),
   mass: 1, // simplificado: todas com mesma massa
+  colorIndex: Math.round(random.range(0, arryColorsLength)),
 });
 
 // -----------------
@@ -161,9 +142,9 @@ const resolveCollision = (a, b) => {
 // -----------------
 // Desenho
 // -----------------
-const drawAgent = (context, agent) => {
-  context.strokeStyle = colors.agents;
-  context.fillStyle = colors.agents;
+const drawAgent = (context, agent, colors) => {
+  context.fillStyle = colors.agents[agent.colorIndex];
+  context.strokeStyle = colors.lines;
   context.lineWidth = 2;
 
   context.beginPath();
@@ -172,7 +153,7 @@ const drawAgent = (context, agent) => {
   context.stroke();
 };
 
-const drawConnection = (context, a, b) => {
+const drawConnection = (context, a, b, colors) => {
   const dist = distance(a.pos, b.pos);
   if (dist > 200) return;
 
@@ -185,42 +166,13 @@ const drawConnection = (context, a, b) => {
   context.stroke();
 };
 
-// -----------------
-// Sketch principal
-// -----------------
-const sketch = ({ width, height }) => {
-  let agents = Array.from({ length: 40 }, () =>
-    createAgent(random.range(0, width), random.range(0, height))
-  );
-
-  return ({ context, width, height }) => {
-    context.fillStyle = colors.bg;
-    context.fillRect(0, 0, width, height);
-
-    // Pinta células onde há agentes
-    highlightGridCell(context, agents, cellGridSize);
-
-    // Grid por cima do fundo
-    drawGrid(context, width, height, cellGridSize);
-
-    // Desenhar conexões + colisões
-    for (let i = 0; i < agents.length; i++) {
-      for (let j = i + 1; j < agents.length; j++) {
-        drawConnection(context, agents[i], agents[j]);
-
-        let [ai, aj] = resolveCollision(agents[i], agents[j]);
-        agents[i] = ai;
-        agents[j] = aj;
-      }
-    }
-
-    // Atualizar + desenhar agentes
-    agents = agents
-      .map((a) => updateAgent(a))
-      .map((a) => bounceAgent(a, width, height));
-
-    agents.forEach((a) => drawAgent(context, a));
-  };
+export {
+  drawGrid,
+  highlightGridCell,
+  createAgent,
+  updateAgent,
+  bounceAgent,
+  resolveCollision,
+  drawAgent,
+  drawConnection,
 };
-
-canvasSketch(sketch, settings);
