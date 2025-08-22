@@ -1,3 +1,5 @@
+// Sketch base OBSOLETO
+
 import canvasSketch from "canvas-sketch";
 import math from "canvas-sketch-util/math";
 import random from "canvas-sketch-util/random";

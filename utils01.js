@@ -22,6 +22,32 @@ const drawGrid = (context, width, height, step = 50, colors) => {
   }
 };
 
+const drawHoverCell = (context, size = 35, colors, mouse) => {
+  if (!mouse.inside) return;
+
+  const cellX = Math.floor(mouse.x / size);
+  const cellY = Math.floor(mouse.y / size);
+
+  const x = cellX * size;
+  const y = cellY * size;
+
+  context.save();
+  // cor do bloco
+  context.fillStyle = colors.bg;
+  // sombra para parecer que está “acima”
+  context.shadowColor = "rgba(0,0,0,0.35)";
+  context.shadowBlur = 18;
+  context.shadowOffsetX = 0;
+  context.shadowOffsetY = 8;
+
+  // pequeno “padding” e “lift” pra reforçar o 3D
+  //   const pad = 4;
+  //   const lift = 2;
+  context.fillRect(x + pad, y + pad - lift, size - pad * 2, size - pad * 2);
+
+  context.restore();
+};
+
 // -----------------
 // "Ativa" o Grid
 // -----------------
@@ -175,4 +201,5 @@ export {
   resolveCollision,
   drawAgent,
   drawConnection,
+  drawHoverCell,
 };

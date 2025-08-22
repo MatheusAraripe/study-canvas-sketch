@@ -1,5 +1,4 @@
 import canvasSketch from "canvas-sketch";
-import math from "canvas-sketch-util/math";
 import random from "canvas-sketch-util/random";
 import {
   drawGrid,
@@ -10,8 +9,8 @@ import {
   resolveCollision,
   drawAgent,
   drawConnection,
+  drawHoverCell,
 } from "./utils01";
-import { color } from "canvas-sketch-util";
 
 const settings = {
   dimensions: [window.innerWidth, window.innerHeight],
@@ -46,16 +45,35 @@ const colors = {
 
 const cellGridSize = 35;
 
+// estado do mouse (em coords do canvas!)
+const mouse = { x: -1, y: -1, inside: false };
+
 // Sketch
 
-const sketch = ({ width, height }) => {
-  let agents = Array.from({ length: 40 }, () =>
+const sketch = ({ width, height, canvas }) => {
+  let agents = Array.from({ length: 60 }, () =>
     createAgent(
       random.range(0, width),
       random.range(0, height),
       colors.agents.length
     )
   );
+
+  // const onMove = (e) => {
+  //   const rect = canvas.getBoundingClientRect();
+  //   const scaleX = canvas.width / rect.width; // considera devicePixelRatio
+  //   const scaleY = canvas.height / rect.height; // idem
+  //   mouse.x = (e.clientX - rect.left) * scaleX;
+  //   mouse.y = (e.clientY - rect.top) * scaleY;
+  //   mouse.inside =
+  //     mouse.x >= 0 && mouse.x <= width && mouse.y >= 0 && mouse.y <= height;
+  // };
+  // const onLeave = () => {
+  //   mouse.inside = false;
+  // };
+
+  // canvas.addEventListener("mousemove", onMove);
+  // canvas.addEventListener("mouseleave", onLeave);
 
   return ({ context, width, height }) => {
     context.fillStyle = colors.bg;
@@ -66,6 +84,9 @@ const sketch = ({ width, height }) => {
 
     // Grid por cima do fundo
     drawGrid(context, width, height, cellGridSize, colors);
+
+    // célula sob o mouse com box-shadow
+    // drawHoverCell(context, cellGridSize, colors, mouse);
 
     // Desenhar conexões + colisões
     for (let i = 0; i < agents.length; i++) {
