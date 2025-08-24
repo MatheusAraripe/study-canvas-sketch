@@ -12,7 +12,6 @@ import {
   initTrailGrid,
   updateTrail,
   drawMouseTrail,
-  handleMouseTrail,
   attachTrailMouse,
 } from "./utils01";
 
@@ -63,11 +62,7 @@ const sketch = ({ width, height, canvas }) => {
   initTrailGrid(width, height, cellGridSize);
 
   // // 2) Mouse mapeado ao espaço do sketch (corrige deslocamentos)
-  const detach = attachTrailMouse(canvas, () => ({ width, height }));
-
-  canvas.addEventListener("mousemove", (e) =>
-    handleMouseTrail(e, canvas, width, height, cellGridSize)
-  );
+  attachTrailMouse(canvas, () => ({ width, height }));
 
   return ({ context, width, height }) => {
     context.fillStyle = colors.bg;

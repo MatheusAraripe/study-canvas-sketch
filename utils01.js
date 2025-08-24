@@ -23,41 +23,14 @@ const drawGrid = (context, width, height, step = 50, colors) => {
 };
 
 const cellSize = 35;
-
-// === Estado do rastro ===
+// Estado do rastro
 let trailCols = 0,
   trailRows = 0;
-let trailGrid = null; // Float32Array para performance
+let trailGrid = null; // intensidades
+let trailColors = null; // cor fixa por célula
 let mouse = { x: -1, y: -1, inside: false };
 
-// Inicializa/reatualiza o grid (chame no início e no resize)
-const initTrailGrid = (width, height, size = cellSize) => {
-  trailCols = Math.ceil(width / size);
-  trailRows = Math.ceil(height / size);
-  trailGrid = new Float32Array(trailCols * trailRows); // zera
-};
-
-// Índice linear (col,row) -> idx
-const tIdx = (cx, cy) => cy * trailCols + cx;
-
-// Marca a célula do mouse com intensidade máxima
-const trailHit = (mx, my, size = cellSize) => {
-  const cx = Math.floor(mx / size);
-  const cy = Math.floor(my / size);
-  if (cx >= 0 && cy >= 0 && cx < trailCols && cy < trailRows) {
-    trailGrid[tIdx(cx, cy)] = 1.0;
-  }
-};
-
-// Faz fade out suave das intensidades
-const updateTrail = (fade = 0.02) => {
-  for (let i = 0; i < trailGrid.length; i++) {
-    const v = trailGrid[i] - fade;
-    trailGrid[i] = v > 0 ? v : 0;
-  }
-};
-
-// Paleta de tons pastéis: azul, roxo, rosa, verde
+// Paleta de tons pastéis
 const pastelHues = [
   [190, 220], // azul
   [260, 280], // roxo
@@ -65,30 +38,60 @@ const pastelHues = [
   [100, 140], // verde
 ];
 
-const trailColor = (t) => {
-  // Escolhe um range de hue da paleta
+// Inicializa grid de intensidade + cores
+const initTrailGrid = (width, height, size = cellSize) => {
+  trailCols = Math.ceil(width / size);
+  trailRows = Math.ceil(height / size);
+  trailGrid = new Float32Array(trailCols * trailRows);
+  trailColors = new Array(trailCols * trailRows).fill(null); // cor vazia
+};
+
+// Index linear
+const tIdx = (cx, cy) => cy * trailCols + cx;
+
+// Sorteia cor pastel para uma célula
+const pickPastelColor = () => {
   const [minHue, maxHue] =
     pastelHues[Math.floor(Math.random() * pastelHues.length)];
   const hue = minHue + Math.random() * (maxHue - minHue);
-
-  // Saturação e luminosidade "pastel"
   const sat = 35 + Math.random() * 10; // 35–45%
   const light = 75 + Math.random() * 10; // 75–85%
-
-  // Alpha proporcional à intensidade
-  return `hsla(${hue}, ${sat}%, ${light}%, ${t})`;
+  return `hsl(${hue}, ${sat}%, ${light}%)`;
 };
 
-// Desenha apenas as células com intensidade > 0
-const drawMouseTrail = (context, size = cellSize) => {
-  // Opcional: deixar cantos nítidos
-  context.imageSmoothingEnabled = false;
+// Marca célula do mouse
+const trailHit = (mx, my, size = cellSize) => {
+  const cx = Math.floor(mx / size);
+  const cy = Math.floor(my / size);
+  if (cx >= 0 && cy >= 0 && cx < trailCols && cy < trailRows) {
+    const idx = tIdx(cx, cy);
+    trailGrid[idx] = 1.0;
+    if (!trailColors[idx]) {
+      trailColors[idx] = pickPastelColor(); // fixa a cor no primeiro uso
+    }
+  }
+};
 
+// Atualiza intensidade com fade
+const updateTrail = (fade = 0.02) => {
+  for (let i = 0; i < trailGrid.length; i++) {
+    const v = trailGrid[i] - fade;
+    trailGrid[i] = v > 0 ? v : 0;
+  }
+};
+
+// Desenha rastro
+const drawMouseTrail = (context, size = cellSize) => {
   for (let x = 0; x < trailCols; x++) {
     for (let y = 0; y < trailRows; y++) {
-      const t = trailGrid[tIdx(x, y)];
+      const idx = tIdx(x, y);
+      const t = trailGrid[idx];
       if (t <= 0) continue;
-      context.fillStyle = trailColor(t);
+
+      const baseColor = trailColors[idx];
+      context.fillStyle = baseColor
+        .replace("hsl", "hsla")
+        .replace(")", `, ${t})`);
       context.fillRect(x * size, y * size, size, size);
     }
   }
