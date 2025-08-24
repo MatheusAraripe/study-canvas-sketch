@@ -22,30 +22,102 @@ const drawGrid = (context, width, height, step = 50, colors) => {
   }
 };
 
-const drawHoverCell = (context, size = 35, colors, mouse) => {
-  if (!mouse.inside) return;
+const cellSize = 35;
 
-  const cellX = Math.floor(mouse.x / size);
-  const cellY = Math.floor(mouse.y / size);
+// === Estado do rastro ===
+let trailCols = 0,
+  trailRows = 0;
+let trailGrid = null; // Float32Array para performance
+let mouse = { x: -1, y: -1, inside: false };
 
-  const x = cellX * size;
-  const y = cellY * size;
+// Inicializa/reatualiza o grid (chame no início e no resize)
+const initTrailGrid = (width, height, size = cellSize) => {
+  trailCols = Math.ceil(width / size);
+  trailRows = Math.ceil(height / size);
+  trailGrid = new Float32Array(trailCols * trailRows); // zera
+};
 
-  context.save();
-  // cor do bloco
-  context.fillStyle = colors.bg;
-  // sombra para parecer que está “acima”
-  context.shadowColor = "rgba(0,0,0,0.35)";
-  context.shadowBlur = 18;
-  context.shadowOffsetX = 0;
-  context.shadowOffsetY = 8;
+// Índice linear (col,row) -> idx
+const tIdx = (cx, cy) => cy * trailCols + cx;
 
-  // pequeno “padding” e “lift” pra reforçar o 3D
-  //   const pad = 4;
-  //   const lift = 2;
-  context.fillRect(x + pad, y + pad - lift, size - pad * 2, size - pad * 2);
+// Marca a célula do mouse com intensidade máxima
+const trailHit = (mx, my, size = cellSize) => {
+  const cx = Math.floor(mx / size);
+  const cy = Math.floor(my / size);
+  if (cx >= 0 && cy >= 0 && cx < trailCols && cy < trailRows) {
+    trailGrid[tIdx(cx, cy)] = 1.0;
+  }
+};
 
-  context.restore();
+// Faz fade out suave das intensidades
+const updateTrail = (fade = 0.02) => {
+  for (let i = 0; i < trailGrid.length; i++) {
+    const v = trailGrid[i] - fade;
+    trailGrid[i] = v > 0 ? v : 0;
+  }
+};
+
+// Paleta de tons pastéis: azul, roxo, rosa, verde
+const pastelHues = [
+  [190, 220], // azul
+  [260, 280], // roxo
+  [320, 350], // rosa
+  [100, 140], // verde
+];
+
+const trailColor = (t) => {
+  // Escolhe um range de hue da paleta
+  const [minHue, maxHue] =
+    pastelHues[Math.floor(Math.random() * pastelHues.length)];
+  const hue = minHue + Math.random() * (maxHue - minHue);
+
+  // Saturação e luminosidade "pastel"
+  const sat = 35 + Math.random() * 10; // 35–45%
+  const light = 75 + Math.random() * 10; // 75–85%
+
+  // Alpha proporcional à intensidade
+  return `hsla(${hue}, ${sat}%, ${light}%, ${t})`;
+};
+
+// Desenha apenas as células com intensidade > 0
+const drawMouseTrail = (context, size = cellSize) => {
+  // Opcional: deixar cantos nítidos
+  context.imageSmoothingEnabled = false;
+
+  for (let x = 0; x < trailCols; x++) {
+    for (let y = 0; y < trailRows; y++) {
+      const t = trailGrid[tIdx(x, y)];
+      if (t <= 0) continue;
+      context.fillStyle = trailColor(t);
+      context.fillRect(x * size, y * size, size, size);
+    }
+  }
+};
+
+// Listener do mouse com mapeamento correto (independe de DPR/retina)
+const attachTrailMouse = (canvas, getWH) => {
+  const onMove = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const { width, height } = getWH(); // pega width/height atuais do sketch
+    const x = ((e.clientX - rect.left) / rect.width) * width;
+    const y = ((e.clientY - rect.top) / rect.height) * height;
+    mouse.x = x;
+    mouse.y = y;
+    mouse.inside = true;
+    trailHit(x, y);
+  };
+  const onLeave = () => {
+    mouse.inside = false;
+  };
+
+  canvas.addEventListener("mousemove", onMove);
+  canvas.addEventListener("mouseleave", onLeave);
+
+  // retorna um disposer para remover depois
+  return () => {
+    canvas.removeEventListener("mousemove", onMove);
+    canvas.removeEventListener("mouseleave", onLeave);
+  };
 };
 
 // -----------------
@@ -201,5 +273,8 @@ export {
   resolveCollision,
   drawAgent,
   drawConnection,
-  drawHoverCell,
+  initTrailGrid,
+  updateTrail,
+  drawMouseTrail,
+  attachTrailMouse,
 };

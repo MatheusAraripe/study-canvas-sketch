@@ -9,7 +9,11 @@ import {
   resolveCollision,
   drawAgent,
   drawConnection,
-  drawHoverCell,
+  initTrailGrid,
+  updateTrail,
+  drawMouseTrail,
+  handleMouseTrail,
+  attachTrailMouse,
 } from "./utils01";
 
 const settings = {
@@ -45,9 +49,6 @@ const colors = {
 
 const cellGridSize = 35;
 
-// estado do mouse (em coords do canvas!)
-const mouse = { x: -1, y: -1, inside: false };
-
 // Sketch
 
 const sketch = ({ width, height, canvas }) => {
@@ -59,21 +60,14 @@ const sketch = ({ width, height, canvas }) => {
     )
   );
 
-  // const onMove = (e) => {
-  //   const rect = canvas.getBoundingClientRect();
-  //   const scaleX = canvas.width / rect.width; // considera devicePixelRatio
-  //   const scaleY = canvas.height / rect.height; // idem
-  //   mouse.x = (e.clientX - rect.left) * scaleX;
-  //   mouse.y = (e.clientY - rect.top) * scaleY;
-  //   mouse.inside =
-  //     mouse.x >= 0 && mouse.x <= width && mouse.y >= 0 && mouse.y <= height;
-  // };
-  // const onLeave = () => {
-  //   mouse.inside = false;
-  // };
+  initTrailGrid(width, height, cellGridSize);
 
-  // canvas.addEventListener("mousemove", onMove);
-  // canvas.addEventListener("mouseleave", onLeave);
+  // // 2) Mouse mapeado ao espaço do sketch (corrige deslocamentos)
+  const detach = attachTrailMouse(canvas, () => ({ width, height }));
+
+  canvas.addEventListener("mousemove", (e) =>
+    handleMouseTrail(e, canvas, width, height, cellGridSize)
+  );
 
   return ({ context, width, height }) => {
     context.fillStyle = colors.bg;
@@ -85,8 +79,9 @@ const sketch = ({ width, height, canvas }) => {
     // Grid por cima do fundo
     drawGrid(context, width, height, cellGridSize, colors);
 
-    // célula sob o mouse com box-shadow
-    // drawHoverCell(context, cellGridSize, colors, mouse);
+    // atualiza e desenha rastros
+    updateTrail(0.02);
+    drawMouseTrail(context, cellGridSize);
 
     // Desenhar conexões + colisões
     for (let i = 0; i < agents.length; i++) {
