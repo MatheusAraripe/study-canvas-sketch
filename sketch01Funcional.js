@@ -49,7 +49,7 @@ const colors = {
   gridCells: "rgba(200, 200, 255, 0.3)",
 };
 
-const cellGridSize = 35;
+const cellGridSize = 30;
 
 // Sketch
 

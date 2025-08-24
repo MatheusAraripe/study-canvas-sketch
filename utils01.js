@@ -3,7 +3,23 @@
 import math from "canvas-sketch-util/math";
 import random from "canvas-sketch-util/random";
 
-const drawGrid = (context, width, height, step = 50, colors) => {
+const cellSize = 30;
+// Estado do rastro
+let trailCols = 0,
+  trailRows = 0;
+let trailGrid = null; // intensidades
+let trailColors = null; // cor fixa por célula
+let mouse = { x: -1, y: -1, inside: false };
+
+// Paleta de tons pastéis
+const pastelHues = [
+  [190, 220], // azul
+  [260, 280], // roxo
+  [320, 350], // rosa
+  [100, 140], // verde
+];
+
+export const drawGrid = (context, width, height, step = 50, colors) => {
   context.strokeStyle = colors.gridLines;
   context.lineWidth = 0.3;
 
@@ -22,24 +38,8 @@ const drawGrid = (context, width, height, step = 50, colors) => {
   }
 };
 
-const cellSize = 35;
-// Estado do rastro
-let trailCols = 0,
-  trailRows = 0;
-let trailGrid = null; // intensidades
-let trailColors = null; // cor fixa por célula
-let mouse = { x: -1, y: -1, inside: false };
-
-// Paleta de tons pastéis
-const pastelHues = [
-  [190, 220], // azul
-  [260, 280], // roxo
-  [320, 350], // rosa
-  [100, 140], // verde
-];
-
 // Inicializa grid de intensidade + cores
-const initTrailGrid = (width, height, size = cellSize) => {
+export const initTrailGrid = (width, height, size = cellSize) => {
   trailCols = Math.ceil(width / size);
   trailRows = Math.ceil(height / size);
   trailGrid = new Float32Array(trailCols * trailRows);
@@ -73,7 +73,7 @@ const trailHit = (mx, my, size = cellSize) => {
 };
 
 // Atualiza intensidade com fade
-const updateTrail = (fade = 0.02) => {
+export const updateTrail = (fade = 0.02) => {
   for (let i = 0; i < trailGrid.length; i++) {
     const v = trailGrid[i] - fade;
     trailGrid[i] = v > 0 ? v : 0;
@@ -81,7 +81,7 @@ const updateTrail = (fade = 0.02) => {
 };
 
 // Desenha rastro
-const drawMouseTrail = (context, size = cellSize) => {
+export const drawMouseTrail = (context, size = cellSize) => {
   for (let x = 0; x < trailCols; x++) {
     for (let y = 0; y < trailRows; y++) {
       const idx = tIdx(x, y);
@@ -98,7 +98,7 @@ const drawMouseTrail = (context, size = cellSize) => {
 };
 
 // Listener do mouse com mapeamento correto (independe de DPR/retina)
-const attachTrailMouse = (canvas, getWH) => {
+export const attachTrailMouse = (canvas, getWH) => {
   const onMove = (e) => {
     const rect = canvas.getBoundingClientRect();
     const { width, height } = getWH(); // pega width/height atuais do sketch
@@ -127,7 +127,7 @@ const attachTrailMouse = (canvas, getWH) => {
 // "Ativa" o Grid
 // -----------------
 
-const highlightGridCell = (context, agents, cellSize, colors) => {
+export const highlightGridCell = (context, agents, cellSize, colors) => {
   context.fillStyle = colors.gridCells;
 
   agents.forEach((agent) => {
@@ -143,7 +143,7 @@ const highlightGridCell = (context, agents, cellSize, colors) => {
 // -----------------
 const createVector = (x, y) => ({ x, y });
 
-const createAgent = (x, y, arryColorsLength) => ({
+export const createAgent = (x, y, arryColorsLength) => ({
   pos: createVector(x, y),
   vel: createVector(random.range(-2, 2), random.range(-2, 2)),
   radius: random.range(4, 8),
@@ -167,7 +167,7 @@ const dot = (a, b) => a.x * b.x + a.y * b.y;
 // -----------------
 // Atualização
 // -----------------
-const updateAgent = (agent) => ({
+export const updateAgent = (agent) => ({
   ...agent,
   pos: {
     x: agent.pos.x + agent.vel.x,
@@ -175,7 +175,7 @@ const updateAgent = (agent) => ({
   },
 });
 
-const bounceAgent = (agent, width, height) => {
+export const bounceAgent = (agent, width, height) => {
   let { vel, pos } = agent;
   let newVel = { ...vel };
 
@@ -192,7 +192,7 @@ const bounceAgent = (agent, width, height) => {
 // -----------------
 // Colisão elástica realista
 // -----------------
-const resolveCollision = (a, b) => {
+export const resolveCollision = (a, b) => {
   const dist = distance(a.pos, b.pos);
   const minDist = a.radius + b.radius;
 
@@ -293,7 +293,7 @@ export const drawAngleArc = (
 // -----------------
 // Desenho
 // -----------------
-const drawAgent = (context, agent, colors) => {
+export const drawAgent = (context, agent, colors) => {
   context.fillStyle = colors.agents[agent.colorIndex];
   context.strokeStyle = colors.lines;
   context.lineWidth = 2;
@@ -304,7 +304,7 @@ const drawAgent = (context, agent, colors) => {
   context.stroke();
 };
 
-const drawConnection = (context, a, b, colors) => {
+export const drawConnection = (context, a, b, colors) => {
   const dist = distance(a.pos, b.pos);
   if (dist > 200) return;
 
@@ -315,19 +315,4 @@ const drawConnection = (context, a, b, colors) => {
   context.moveTo(a.pos.x, a.pos.y);
   context.lineTo(b.pos.x, b.pos.y);
   context.stroke();
-};
-
-export {
-  drawGrid,
-  highlightGridCell,
-  createAgent,
-  updateAgent,
-  bounceAgent,
-  resolveCollision,
-  drawAgent,
-  drawConnection,
-  initTrailGrid,
-  updateTrail,
-  drawMouseTrail,
-  attachTrailMouse,
 };
