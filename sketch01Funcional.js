@@ -13,6 +13,9 @@ import {
   updateTrail,
   drawMouseTrail,
   attachTrailMouse,
+  vectorBetween,
+  angleBetween,
+  drawAngleArc,
 } from "./utils01";
 
 const settings = {
@@ -95,6 +98,36 @@ const sketch = ({ width, height, canvas }) => {
       .map((a) => bounceAgent(a, width, height));
 
     agents.forEach((a) => drawAgent(context, a, colors));
+    agents.forEach((agent, i) => {
+      const neighbors = [];
+
+      for (let j = 0; j < agents.length; j++) {
+        if (i === j) continue;
+        const other = agents[j];
+        const dx = agent.pos.x - other.pos.x;
+        const dy = agent.pos.y - other.pos.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < 200) {
+          neighbors.push(other);
+        }
+      }
+
+      // se tiver pelo menos 2 vizinhos, calcula ângulo entre as ligações
+      if (neighbors.length >= 2) {
+        const v1 = vectorBetween(agent.pos, neighbors[0].pos);
+        const v2 = vectorBetween(agent.pos, neighbors[1].pos);
+        const angle = angleBetween(v1, v2);
+
+        // desenha o arco do ângulo
+        drawAngleArc(context, agent.pos, v1, v2, 25, "#1e1e1e");
+
+        // desenhar o ângulo no canvas
+        const { x, y } = agent.pos;
+        context.fillStyle = "#333";
+        context.font = "12px sans-serif";
+        context.fillText(angle.toFixed(1) + "°", x + 10, y - 10);
+      }
+    });
   };
 };
 

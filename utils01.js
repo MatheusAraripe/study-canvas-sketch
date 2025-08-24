@@ -161,6 +161,7 @@ const normalize = (v) => {
   return mag === 0 ? { x: 0, y: 0 } : { x: v.x / mag, y: v.y / mag };
 };
 
+// produto escalar
 const dot = (a, b) => a.x * b.x + a.y * b.y;
 
 // -----------------
@@ -238,6 +239,55 @@ const resolveCollision = (a, b) => {
   }
 
   return [a, b];
+};
+
+// -----------------
+// Acha o ângulo entre as linhas
+// -----------------
+
+// diferença entre dois pontos (vetor)
+export const vectorBetween = (a, b) => ({
+  x: b.x - a.x,
+  y: b.y - a.y,
+});
+
+// módulo (tamanho do vetor)
+const magnitude = (v) => Math.sqrt(v.x * v.x + v.y * v.y);
+
+// ângulo em graus entre dois vetores
+export const angleBetween = (a, b) => {
+  const magA = magnitude(a);
+  const magB = magnitude(b);
+  if (magA === 0 || magB === 0) return 0;
+  const cosTheta = dot(a, b) / (magA * magB);
+  const clamped = Math.min(1, Math.max(-1, cosTheta)); // evita NaN
+  return (Math.acos(clamped) * 180) / Math.PI;
+};
+
+export const drawAngleArc = (
+  context,
+  center,
+  v1,
+  v2,
+  radius = 30,
+  color = "red"
+) => {
+  const a1 = Math.atan2(v1.y, v1.x);
+  const a2 = Math.atan2(v2.y, v2.x);
+
+  // diferença mínima (garante arco no sentido menor)
+  let diff = a2 - a1;
+  if (diff < -Math.PI) diff += 2 * Math.PI;
+  if (diff > Math.PI) diff -= 2 * Math.PI;
+
+  context.save();
+  context.strokeStyle = color;
+  context.lineWidth = 2;
+
+  context.beginPath();
+  context.arc(center.x, center.y, radius, a1, a1 + diff, diff < 0);
+  context.stroke();
+  context.restore();
 };
 
 // -----------------
