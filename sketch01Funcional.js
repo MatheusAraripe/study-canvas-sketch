@@ -62,6 +62,73 @@ const sketch = ({ width, height, canvas }) => {
     )
   );
 
+  let draggingAgent = null;
+  let mouse = { x: 0, y: 0, px: 0, py: 0 };
+
+  // função auxiliar para mapear mouse ao espaço do canvas
+  const getMousePos = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: ((e.clientX - rect.left) / rect.width) * width,
+      y: ((e.clientY - rect.top) / rect.height) * height,
+    };
+  };
+
+  canvas.addEventListener("pointermove", (e) => {
+    const pos = getMousePos(e);
+    mouse.px = mouse.x;
+    mouse.py = mouse.y;
+    mouse.x = pos.x;
+    mouse.y = pos.y;
+
+    let hovering = false;
+    for (const a of agents) {
+      const dx = mouse.x - a.pos.x;
+      const dy = mouse.y - a.pos.y;
+      if (dx * dx + dy * dy <= a.radius * a.radius) {
+        hovering = true;
+        break;
+      }
+    }
+
+    // cursor muda só quando está em cima de um agente
+    canvas.style.cursor = hovering ? "pointer" : "default";
+
+    if (draggingAgent) {
+      draggingAgent.pos.x = mouse.x;
+      draggingAgent.pos.y = mouse.y;
+      // zera a vel enquanto arrasta
+      draggingAgent.vel.x = 0;
+      draggingAgent.vel.y = 0;
+    }
+  });
+
+  canvas.addEventListener("pointerdown", (e) => {
+    const pos = getMousePos(e);
+    mouse.x = pos.x;
+    mouse.y = pos.y;
+
+    for (const a of agents) {
+      const dx = mouse.x - a.pos.x;
+      const dy = mouse.y - a.pos.y;
+      if (dx * dx + dy * dy <= a.radius * a.radius) {
+        draggingAgent = a;
+        canvas.setPointerCapture?.(e.pointerId);
+        break;
+      }
+    }
+  });
+
+  canvas.addEventListener("pointerup", (e) => {
+    if (draggingAgent) {
+      // aplica “arremesso” = delta do mouse
+      draggingAgent.vel.x = mouse.x - mouse.px;
+      draggingAgent.vel.y = mouse.y - mouse.py;
+    }
+    draggingAgent = null;
+    canvas.releasePointerCapture?.(e.pointerId);
+  });
+
   initTrailGrid(width, height, cellGridSize);
 
   // // 2) Mouse mapeado ao espaço do sketch (corrige deslocamentos)
@@ -73,6 +140,7 @@ const sketch = ({ width, height, canvas }) => {
 
     // Pinta células onde há agentes
     highlightGridCell(context, agents, cellGridSize, colors);
+    // if (draggingAgent) console.log("draggingAgent " + draggingAgent);
 
     // Grid por cima do fundo
     drawGrid(context, width, height, cellGridSize, colors);
@@ -86,7 +154,11 @@ const sketch = ({ width, height, canvas }) => {
       for (let j = i + 1; j < agents.length; j++) {
         drawConnection(context, agents[i], agents[j], colors);
 
+        if (agents[i] === draggingAgent || agents[j] === draggingAgent)
+          continue;
         let [ai, aj] = resolveCollision(agents[i], agents[j]);
+
+        // let [ai, aj] = resolveCollision(agents[i], agents[j]);
         agents[i] = ai;
         agents[j] = aj;
       }
@@ -94,10 +166,16 @@ const sketch = ({ width, height, canvas }) => {
 
     // Atualizar + desenhar agentes
     agents = agents
-      .map((a) => updateAgent(a))
-      .map((a) => bounceAgent(a, width, height));
+      .map((a) => (a === draggingAgent ? a : updateAgent(a)))
+      .map((a) => (a === draggingAgent ? a : bounceAgent(a, width, height)));
 
-    agents.forEach((a) => drawAgent(context, a, colors));
+    agents.forEach((a) =>
+      a === draggingAgent
+        ? drawAgent(context, a, colors, true)
+        : drawAgent(context, a, colors)
+    );
+
+    // Desenha o ângulo entre as linhas
     agents.forEach((agent, i) => {
       const neighbors = [];
 

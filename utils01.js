@@ -293,13 +293,24 @@ export const drawAngleArc = (
 // -----------------
 // Desenho
 // -----------------
-export const drawAgent = (context, agent, colors) => {
+export const drawAgent = (context, agent, colors, dragging = false) => {
   context.fillStyle = colors.agents[agent.colorIndex];
   context.strokeStyle = colors.lines;
   context.lineWidth = 2;
 
+  let radius = agent.radius;
+
+  if (dragging) {
+    context.shadowColor = "rgba(0, 0, 0, 0.8)";
+    context.shadowBlur = 10;
+    radius = radius * 1.35;
+  } else {
+    context.shadowColor = "transparent";
+    context.shadowBlur = 0;
+  }
+
   context.beginPath();
-  context.arc(agent.pos.x, agent.pos.y, agent.radius, 0, Math.PI * 2);
+  context.arc(agent.pos.x, agent.pos.y, radius, 0, Math.PI * 2);
   context.fill();
   context.stroke();
 };
