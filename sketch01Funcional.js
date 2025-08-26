@@ -46,7 +46,7 @@ const colors = {
   agents: randomColors,
   bg: "#FFFCF2",
   gridLines: "#C7BFA6",
-  gridCells: "rgba(200, 200, 255, 0.3)",
+  gridCells: "#e7e4d9ff",
 };
 
 const cellGridSize = 30;
