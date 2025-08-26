@@ -16,7 +16,7 @@ import {
   vectorBetween,
   angleBetween,
   drawAngleArc,
-} from "./utils01";
+} from "../../utils/utils01";
 
 const settings = {
   dimensions: [window.innerWidth, window.innerHeight],

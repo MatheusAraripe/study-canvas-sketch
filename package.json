@@ -4,7 +4,9 @@
   "description": "",
   "main": "sketch00.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev:sketche01": "canvas-sketch sketches/sketche01/sketche01Funcional.js --open --html=sketches/sketche01/index.html",
+    "build:sketche01": "canvas-sketch sketches/sketche01/sketche01Funcional.js --build --html=sketches/sketche01/index.html --output=sketches/sketch01"
   },
   "keywords": [],
   "author": "",
