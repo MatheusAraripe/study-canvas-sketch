@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:sketch01": "canvas-sketch sketches/sketch01/sketch01Funcional.js --open --html=sketches/sketch01/index.html",
-    "build:sketch01": "canvas-sketch sketches/sketch01/sketch01Funcional.js --build --html=sketches/sketch01/index.html --output=sketches/sketch01",
+    "build:sketch01": "canvas-sketch sketches/sketch01/sketch01Funcional.js --build --html=sketches/sketch01/index.html --dir=sketches/sketch01/dist",
     "dev:sketch02": "canvas-sketch sketches/sketch02/sketch02.js --open",
-    "build:sketch02": "canvas-sketch sketches/sketch02/sketch02.js --build --output=sketches/sketch01"
+    "build:sketch02": "canvas-sketch sketches/sketch02/sketch02.js --build --dir=sketches/sketch02/dist"
   },
   "keywords": [],
   "author": "",
