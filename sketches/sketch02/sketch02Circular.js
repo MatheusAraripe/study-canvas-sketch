@@ -14,7 +14,13 @@ const params = {
   scaleMin: 1,
   scaleMax: 30,
   frequency: 0.001,
-  amplitude: 0.2,
+};
+
+// Função auxiliar para calcular a distância entre dois pontos (x1, y1) e (x2, y2)
+const dist = (x1, y1, x2, y2) => {
+  const dx = x1 - x2;
+  const dy = y1 - y2;
+  return Math.sqrt(dx * dx + dy * dy);
 };
 
 const sketch = () => {
@@ -24,46 +30,48 @@ const sketch = () => {
 
     const cols = params.cols;
     const rows = params.rows;
-
     const numCels = cols * rows;
 
     const gridW = width * 0.9;
     const gridH = height * 0.9;
     const cellW = gridW / cols;
     const cellH = gridH / rows;
-    const cellMargx = ((width - gridW) * 1) / 2;
-    const cellMargh = ((height - gridH) * 1) / 2;
+    const cellMargx = (width - gridW) / 2;
+    const cellMargh = (height - gridH) / 2;
+
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const radius = width * 0.4;
 
     for (let i = 0; i < numCels; i++) {
-      // usando módulo para calcular o grid
       const col = i % cols;
       const row = Math.floor(i / cols);
 
-      const x = col * cellW;
-      const y = row * cellH;
-      const w = cellW * 0.8;
-      // const h = cellH * 0.8;
+      const x = cellMargx + col * cellW;
+      const y = cellMargh + row * cellH;
 
-      // const n = random.noise2D(x + frame * 10, y, params.frequency);
+      const cellCenterX = x + cellW * 0.5;
+      const cellCenterY = y + cellH * 0.5;
+
+      const distance = dist(cellCenterX, cellCenterY, centerX, centerY);
+
       const n = random.noise3D(x, y, frame * 10, params.frequency);
-
-      const angle = n * Math.PI * params.amplitude;
       const scale = math.mapRange(n, -1, 1, params.scaleMin, params.scaleMax);
 
-      // desenhando grid
-      context.save();
-      context.translate(x, y);
-      context.translate(cellMargx, cellMargh);
-      context.translate(cellW * 0.5, cellH * 0.5);
-      context.rotate(angle);
+      const fade = math.mapRange(distance, 0, radius, 1, 0, true);
+      const finalScale = scale * fade;
 
-      context.lineWidth = scale;
+      if (finalScale > 0) {
+        context.save();
+        context.translate(cellCenterX, cellCenterY);
 
-      context.beginPath();
-      context.moveTo(w * -0.5, 0);
-      context.lineTo(w * 0.5, 0);
-      context.stroke();
-      context.restore();
+        context.fillStyle = "black";
+        context.beginPath();
+        context.arc(0, 0, finalScale, 0, Math.PI * 2);
+        context.fill();
+
+        context.restore();
+      }
     }
   };
 };
@@ -80,7 +88,6 @@ const createPane = () => {
 
   folder = pane.addFolder({ title: "Noise" });
   folder.addInput(params, "frequency", { min: -0.001, max: 0.01 });
-  folder.addInput(params, "amplitude", { min: 0, max: 1 });
 };
 createPane();
 
