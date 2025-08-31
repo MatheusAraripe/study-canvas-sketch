@@ -2,23 +2,65 @@
 <html lang="pt-br">
   <head>
     <meta charset="utf-8" />
-    <title>noise</title>
+    <title>Noise</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-      * {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        height: 100%;
-        width: 100%;
+      :root {
+        --tp-base-background-color: hsla(0, 0%, 10%, 0.72);
+        --tp-base-shadow-color: hsla(0, 0%, 0%, 0.33);
+        --tp-button-background-color: hsla(179, 81%, 43%, 1);
+        --tp-button-background-color-active: hsla(0, 0%, 100%, 1);
+        --tp-button-background-color-focus: hsla(0, 0%, 95%, 1);
+        --tp-button-background-color-hover: hsla(0, 0%, 85%, 1);
+        --tp-button-foreground-color: hsla(0, 0%, 0%, 0.8);
+        --tp-container-background-color: hsla(0, 0%, 0%, 0.3);
+        --tp-container-background-color-active: hsla(0, 0%, 0%, 0.6);
+        --tp-container-background-color-focus: hsla(0, 0%, 0%, 0.5);
+        --tp-container-background-color-hover: hsla(0, 0%, 0%, 0.4);
+        --tp-container-foreground-color: hsla(0, 0%, 100%, 1);
+        --tp-groove-foreground-color: hsla(0, 0%, 0%, 0.2);
+        --tp-input-background-color: hsla(0, 0%, 0%, 0.5);
+        --tp-input-background-color-active: hsla(0, 0%, 0%, 0.6);
+        --tp-input-background-color-focus: hsla(0, 0%, 0%, 0.5);
+        --tp-input-background-color-hover: hsla(0, 0%, 0%, 0.4);
+        --tp-input-foreground-color: hsla(179, 81%, 43%, 1);
+        --tp-label-foreground-color: hsla(0, 0%, 100%, 1);
+        --tp-monitor-background-color: hsla(0, 0%, 0%, 0.3);
+        --tp-monitor-foreground-color: hsla(0, 0%, 100%, 1);
       }
-      canvas {
-        display: block;
-        width: 100% !important;
-        height: 100% !important;
+      body {
+        margin: 0;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* O overlay de scan lines */
+      body::after {
+        content: ""; /* Pseudo-elementos precisam de 'content' para existir */
+        position: absolute; /* Posiciona o overlay sobre o conteúdo */
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+
+        background-image: repeating-linear-gradient(
+          0deg,
+          /* Direção das linhas (0deg = horizontal) */ rgba(0, 0, 0, 0.2) 0px,
+          /* Cor da linha e início */ rgba(0, 0, 0, 0.2) 1px,
+          /* Cor e fim da linha (1px de espessura) */ transparent 1px,
+          /* Início da parte transparente */ transparent 3px
+            /* Fim da parte transparente (2px de espaço) */
+        );
+
+        /* Impede que o overlay bloqueie cliques e movimentos do mouse */
+        pointer-events: none;
+
+        /* Garante que o overlay fique por cima de tudo */
+        z-index: 10;
       }
     </style>
   </head>
-  <body>
-    <script src="./sketch02.js"></script>
+  <body class="h-screen flex items-center justify-center bg-[#011015]">
+    <script src="./sketch02Circular.js"></script>
   </body>
 </html>

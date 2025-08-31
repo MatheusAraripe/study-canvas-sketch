@@ -9,8 +9,8 @@ const settings = {
 };
 
 const params = {
-  cols: 50,
-  rows: 50,
+  cols: 30,
+  rows: 30,
   scaleMin: 1,
   scaleMax: 30,
   frequency: 0.001,
@@ -23,10 +23,34 @@ const dist = (x1, y1, x2, y2) => {
   return Math.sqrt(dx * dx + dy * dy);
 };
 
-const sketch = () => {
-  return ({ context, width, height, frame }) => {
-    context.fillStyle = "white";
+const sketch = ({ canvas, width, height }) => {
+  const mouse = { x: -9999, y: -9999 };
+
+  // --- COORDENADAS ---
+  canvas.addEventListener("mousemove", (event) => {
+    // Pega o tamanho real do elemento na tela
+    const bounds = canvas.getBoundingClientRect();
+
+    const scaleX = width / bounds.width;
+    const scaleY = height / bounds.height;
+
+    mouse.x = event.offsetX * scaleX;
+    mouse.y = event.offsetY * scaleY;
+  });
+
+  // --- EVENTO MOUSELEAVE ---
+  canvas.addEventListener("mouseleave", () => {
+    // Reseta a posição do mouse para um lugar distante quando ele sai da tela
+    mouse.x = -9999;
+    mouse.y = -9999;
+  });
+
+  return ({ context, frame }) => {
+    context.fillStyle = "#011015";
     context.fillRect(0, 0, width, height);
+
+    context.shadowColor = "#00eaff";
+    context.shadowBlur = 10;
 
     const cols = params.cols;
     const rows = params.rows;
@@ -43,6 +67,9 @@ const sketch = () => {
     const centerY = height / 2;
     const radius = width * 0.4;
 
+    const mouseRadius = 50;
+    const maxRepelForce = 40;
+
     for (let i = 0; i < numCels; i++) {
       const col = i % cols;
       const row = Math.floor(i / cols);
@@ -55,6 +82,34 @@ const sketch = () => {
 
       const distance = dist(cellCenterX, cellCenterY, centerX, centerY);
 
+      let finalX = cellCenterX;
+      let finalY = cellCenterY;
+
+      const distToMouse = dist(cellCenterX, cellCenterY, mouse.x, mouse.y);
+
+      if (distToMouse < mouseRadius) {
+        const vecX = cellCenterX - mouse.x;
+        const vecY = cellCenterY - mouse.y;
+
+        const repelForce = math.mapRange(
+          distToMouse,
+          0,
+          mouseRadius,
+          maxRepelForce,
+          0
+        );
+
+        const pushX = (vecX / distToMouse) * repelForce;
+        const pushY = (vecY / distToMouse) * repelForce;
+
+        finalX += pushX;
+        finalY += pushY;
+      }
+
+      if (distance > radius) {
+        continue;
+      }
+
       const n = random.noise3D(x, y, frame * 10, params.frequency);
       const scale = math.mapRange(n, -1, 1, params.scaleMin, params.scaleMax);
 
@@ -63,9 +118,9 @@ const sketch = () => {
 
       if (finalScale > 0) {
         context.save();
-        context.translate(cellCenterX, cellCenterY);
+        context.translate(finalX, finalY);
 
-        context.fillStyle = "black";
+        context.fillStyle = "#15C8C5";
         context.beginPath();
         context.arc(0, 0, finalScale, 0, Math.PI * 2);
         context.fill();
@@ -81,8 +136,8 @@ const createPane = () => {
 
   let folder;
   folder = pane.addFolder({ title: "Grid" });
-  folder.addInput(params, "cols", { min: 1, max: 200, step: 1 });
-  folder.addInput(params, "rows", { min: 1, max: 200, step: 1 });
+  folder.addInput(params, "cols", { min: 1, max: 50, step: 1 });
+  folder.addInput(params, "rows", { min: 1, max: 50, step: 1 });
   folder.addInput(params, "scaleMin", { min: 1, max: 100 });
   folder.addInput(params, "scaleMax", { min: 1, max: 100 });
 
