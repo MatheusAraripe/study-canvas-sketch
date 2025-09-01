@@ -120,6 +120,19 @@ const sketch = ({ canvas, width, height }) => {
       trailContext.fillRect(0, 0, width, height);
     }
 
+    // "Pintar" o rastro de cada onda ativa
+    waves.forEach((wave) => {
+      const timeSinceClick = (Date.now() - wave.startTime) / 1000;
+      const waveFront = timeSinceClick * waveSpeed;
+      // Desenha a "crista de calor" da onda no canvas de rastro
+      trailContext.strokeStyle = "rgba(255, 102, 0, 0.93)";
+      trailContext.lineWidth = waveWidth; // A espessura do anel de calor
+
+      trailContext.beginPath();
+      trailContext.arc(wave.x, wave.y, waveFront, 0, Math.PI * 2);
+      trailContext.stroke();
+    });
+
     const trailImageData = trailContext.getImageData(0, 0, width, height).data;
 
     // --- RENDERIZAÇÃO PRINCIPAL (no canvas visível) ---
