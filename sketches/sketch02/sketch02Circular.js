@@ -45,7 +45,30 @@ const sketch = ({ canvas, width, height }) => {
     mouse.y = -9999;
   });
 
-  return ({ context, frame }) => {
+  // --- ONDA DE CHOQUE ---
+  // 1. Array para armazenar os cliques (ondas)
+  const waves = [];
+
+  // 2. Parâmetros da onda
+  const waveSpeed = 800; // Velocidade de propagação da onda em pixels/segundo
+  const waveStrength = 10; // Força máxima do deslocamento
+  const waveWidth = 20; // Largura da "crista" da onda
+
+  // 3. Adiciona um 'ouvinte' para o evento de clique
+  canvas.addEventListener("click", (event) => {
+    // Escala as coordenadas do clique, assim como fizemos com o mouse
+    const bounds = canvas.getBoundingClientRect();
+    const scaleX = width / bounds.width;
+    const scaleY = height / bounds.height;
+
+    const clickX = event.offsetX * scaleX;
+    const clickY = event.offsetY * scaleY;
+
+    // Adiciona uma nova onda à lista com sua posição e tempo de início
+    waves.push({ x: clickX, y: clickY, startTime: Date.now() });
+  });
+
+  return ({ context, frame, time }) => {
     context.fillStyle = "#011015";
     context.fillRect(0, 0, width, height);
 
@@ -67,8 +90,10 @@ const sketch = ({ canvas, width, height }) => {
     const centerY = height / 2;
     const radius = width * 0.4;
 
-    const mouseRadius = 50;
+    const mouseRadius = 70;
     const maxRepelForce = 40;
+    // Parâmetro para a força da turbulência
+    const turbulenceForce = 200;
 
     for (let i = 0; i < numCels; i++) {
       const col = i % cols;
@@ -90,7 +115,6 @@ const sketch = ({ canvas, width, height }) => {
       if (distToMouse < mouseRadius) {
         const vecX = cellCenterX - mouse.x;
         const vecY = cellCenterY - mouse.y;
-
         const repelForce = math.mapRange(
           distToMouse,
           0,
@@ -98,17 +122,58 @@ const sketch = ({ canvas, width, height }) => {
           maxRepelForce,
           0
         );
-
         const pushX = (vecX / distToMouse) * repelForce;
         const pushY = (vecY / distToMouse) * repelForce;
 
-        finalX += pushX;
-        finalY += pushY;
-      }
+        // Força de Turbulência com Noise
+        // Calcular um ângulo de ruído baseado na posição da bolinha e no tempo
+        const noiseAngle =
+          random.noise3D(x * 0.01, y * 0.01, time * 0.3) * Math.PI * 2;
+        // Criar um vetor de turbulência a partir do ângulo
+        const turbulenceX = Math.cos(noiseAngle);
+        const turbulenceY = Math.sin(noiseAngle);
+        // A força da turbulência também diminui com a distância
+        const turbulenceStrength = math.mapRange(
+          distToMouse,
+          0,
+          mouseRadius,
+          turbulenceForce,
+          0
+        );
 
+        finalX += pushX + turbulenceX * turbulenceStrength;
+        finalY += pushY + turbulenceY * turbulenceStrength;
+      }
       if (distance > radius) {
         continue;
       }
+
+      // --- EFEITO DA ONDA DE CHOQUE ---
+      // Para cada onda ativa, calculamos seu efeito na bolinha
+      waves.forEach((wave) => {
+        const timeSinceClick = (Date.now() - wave.startTime) / 1000; // Tempo em segundos
+        const waveFront = timeSinceClick * waveSpeed; // Posição atual da crista da onda
+
+        const distToWaveCenter = dist(cellCenterX, cellCenterY, wave.x, wave.y);
+
+        // Verifica se a bolinha está na área da crista da onda
+        if (
+          distToWaveCenter > waveFront - waveWidth / 2 &&
+          distToWaveCenter < waveFront + waveWidth / 2
+        ) {
+          const vecX = cellCenterX - wave.x;
+          const vecY = cellCenterY - wave.y;
+
+          // A força da onda diminui com a distância
+          const forceFade = math.mapRange(distToWaveCenter, 0, width, 1, 0);
+
+          const pushX = (vecX / distToWaveCenter) * waveStrength * forceFade;
+          const pushY = (vecY / distToWaveCenter) * waveStrength * forceFade;
+
+          finalX += pushX;
+          finalY += pushY;
+        }
+      });
 
       const n = random.noise3D(x, y, frame * 10, params.frequency);
       const scale = math.mapRange(n, -1, 1, params.scaleMin, params.scaleMax);
@@ -127,6 +192,10 @@ const sketch = ({ canvas, width, height }) => {
 
         context.restore();
       }
+    }
+    // Opcional: Limpa ondas antigas para não sobrecarregar a memória
+    if (waves.length > 5) {
+      waves.shift();
     }
   };
 };
