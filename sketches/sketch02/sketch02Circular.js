@@ -16,16 +16,25 @@ const params = {
   frequency: 0.001,
 };
 
-// Função auxiliar para calcular a distância entre dois pontos (x1, y1) e (x2, y2)
 const dist = (x1, y1, x2, y2) => {
   const dx = x1 - x2;
   const dy = y1 - y2;
   return Math.sqrt(dx * dx + dy * dy);
 };
 
-const sketch = ({ canvas, width, height }) => {
-  const mouse = { x: -9999, y: -9999 };
+const crtCyan = { r: 21, g: 200, b: 197 }; // Cor base rgb(21 200 197)
+const hotYellow = { r: 255, g: 255, b: 0 };
+const strongRed = { r: 255, g: 40, b: 0 };
 
+const sketch = ({ canvas, width, height }) => {
+  // --- CANVAS DE RASTRO ---
+  // Criar um canvas extra, fora da tela, para desenhar o rastro
+  const trailCanvas = document.createElement("canvas");
+  trailCanvas.width = width;
+  trailCanvas.height = height;
+  const trailContext = trailCanvas.getContext("2d");
+
+  const mouse = { x: -9999, y: -9999 };
   // --- COORDENADAS ---
   canvas.addEventListener("mousemove", (event) => {
     // Pega o tamanho real do elemento na tela
@@ -40,23 +49,19 @@ const sketch = ({ canvas, width, height }) => {
 
   // --- EVENTO MOUSELEAVE ---
   canvas.addEventListener("mouseleave", () => {
-    // Reseta a posição do mouse para um lugar distante quando ele sai da tela
     mouse.x = -9999;
     mouse.y = -9999;
   });
 
   // --- ONDA DE CHOQUE ---
-  // 1. Array para armazenar os cliques (ondas)
   const waves = [];
 
-  // 2. Parâmetros da onda
+  // Parâmetros da onda
   const waveSpeed = 800; // Velocidade de propagação da onda em pixels/segundo
-  const waveStrength = 10; // Força máxima do deslocamento
+  const waveStrength = 20; // Força máxima do deslocamento
   const waveWidth = 20; // Largura da "crista" da onda
 
-  // 3. Adiciona um 'ouvinte' para o evento de clique
   canvas.addEventListener("click", (event) => {
-    // Escala as coordenadas do clique, assim como fizemos com o mouse
     const bounds = canvas.getBoundingClientRect();
     const scaleX = width / bounds.width;
     const scaleY = height / bounds.height;
@@ -71,9 +76,6 @@ const sketch = ({ canvas, width, height }) => {
   return ({ context, frame, time }) => {
     context.fillStyle = "#011015";
     context.fillRect(0, 0, width, height);
-
-    context.shadowColor = "#00eaff";
-    context.shadowBlur = 10;
 
     const cols = params.cols;
     const rows = params.rows;
@@ -94,6 +96,35 @@ const sketch = ({ canvas, width, height }) => {
     const maxRepelForce = 40;
     // Parâmetro para a força da turbulência
     const turbulenceForce = 200;
+
+    // --- ATUALIZAÇÃO DO RASTRO ---
+    trailContext.fillStyle = "rgba(0, 0, 0, 0.1)";
+    trailContext.fillRect(0, 0, width, height);
+
+    if (mouse.x > 0 && mouse.y > 0) {
+      const brushRadius = 150;
+      const gradient = trailContext.createRadialGradient(
+        mouse.x,
+        mouse.y,
+        0,
+        mouse.x,
+        mouse.y,
+        brushRadius
+      );
+      gradient.addColorStop(0, "rgba(255, 255, 200, 0.8)");
+      gradient.addColorStop(0.25, "rgba(255, 200, 0, 0.6)");
+      gradient.addColorStop(0.6, "rgba(255, 100, 0, 0.3)");
+      gradient.addColorStop(1, "rgba(255, 40, 0, 0)");
+
+      trailContext.fillStyle = gradient;
+      trailContext.fillRect(0, 0, width, height);
+    }
+
+    const trailImageData = trailContext.getImageData(0, 0, width, height).data;
+
+    // --- RENDERIZAÇÃO PRINCIPAL (no canvas visível) ---
+    context.fillStyle = "#020f14";
+    context.fillRect(0, 0, width, height);
 
     for (let i = 0; i < numCels; i++) {
       const col = i % cols;
@@ -181,11 +212,47 @@ const sketch = ({ canvas, width, height }) => {
       const fade = math.mapRange(distance, 0, radius, 1, 0, true);
       const finalScale = scale * fade;
 
+      // --- LÓGICA DE COR BASEADA NO RASTRO ---
+      const ix = Math.floor(finalX);
+      const iy = Math.floor(finalY);
+
+      // Garante que não vai tentar ler pixels fora da tela
+      if (ix < 0 || ix >= width || iy < 0 || iy >= height) continue;
+
+      const pixelIndex = (iy * width + ix) * 4;
+      const r = trailImageData[pixelIndex];
+      const g = trailImageData[pixelIndex + 1];
+      const trailIntensity = (r + g) / 510;
+
+      // --- ALTERADO: LÓGICA DE INTERPOLAÇÃO MULTI-ETAPA ---
+      let finalR, finalG, finalB;
+
+      if (trailIntensity < 0.5) {
+        // Se a intensidade é baixa (0 a 0.5), interpola de Ciano para Amarelo
+        const factor = math.mapRange(trailIntensity, 0, 0.5, 0, 1, true);
+        finalR = math.mapRange(factor, 0, 1, crtCyan.r, hotYellow.r);
+        finalG = math.mapRange(factor, 0, 1, crtCyan.g, hotYellow.g);
+        finalB = math.mapRange(factor, 0, 1, crtCyan.b, hotYellow.b);
+      } else {
+        // Se a intensidade é alta (0.5 a 1), interpola de Amarelo para Vermelho
+        const factor = math.mapRange(trailIntensity, 0.5, 1, 0, 1, true);
+        finalR = math.mapRange(factor, 0, 1, hotYellow.r, strongRed.r);
+        finalG = math.mapRange(factor, 0, 1, hotYellow.g, strongRed.g);
+        finalB = math.mapRange(factor, 0, 1, hotYellow.b, strongRed.b);
+      }
+
+      const finalColor = `rgb(${Math.floor(finalR)}, ${Math.floor(
+        finalG
+      )}, ${Math.floor(finalB)})`;
+
       if (finalScale > 0) {
         context.save();
         context.translate(finalX, finalY);
 
-        context.fillStyle = "#15C8C5";
+        context.fillStyle = finalColor;
+        context.shadowColor = finalColor;
+        context.shadowBlur = 10;
+
         context.beginPath();
         context.arc(0, 0, finalScale, 0, Math.PI * 2);
         context.fill();
@@ -205,8 +272,8 @@ const createPane = () => {
 
   let folder;
   folder = pane.addFolder({ title: "Grid" });
-  folder.addInput(params, "cols", { min: 1, max: 50, step: 1 });
-  folder.addInput(params, "rows", { min: 1, max: 50, step: 1 });
+  folder.addInput(params, "cols", { min: 1, max: 60, step: 1 });
+  folder.addInput(params, "rows", { min: 1, max: 60, step: 1 });
   folder.addInput(params, "scaleMin", { min: 1, max: 100 });
   folder.addInput(params, "scaleMax", { min: 1, max: 100 });
 
