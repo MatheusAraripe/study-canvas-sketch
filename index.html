@@ -4,27 +4,40 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Playground</title>
-
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
     />
-
     <style>
-      /* Definindo fontes base */
       body {
         font-family: "Inter", sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+        user-select: none; /* Impede a seleção de texto durante o arraste */
+
+        /* Fundo de "quadro branco" com grid pontilhado */
+        background-color: #f5f5f5;
+        background-image: radial-gradient(circle, #cbd5e1 1px, transparent 1px);
+        background-size: 24px 24px;
+      }
+      .draggable-file {
+        cursor: grab;
+      }
+      /* Efeito de arrastar para TODOS os itens (escala e cursor) */
+      .draggable-file.dragging {
+        transform: scale(1.05);
+        cursor: grabbing;
+      }
+      /* Efeito de sombra APENAS para itens que NÃO são a cabeça */
+      .draggable-file.dragging:not(#cabeca) {
+        box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
       }
     </style>
   </head>
-  <body class="bg-[#F5F5F5] text-[#434343]">
+  <body class="text-[#434343] overflow-hidden">
     <!-- Mensagem para Dispositivos Móveis -->
     <div
       class="md:hidden flex flex-col items-center justify-center h-screen text-center p-6 bg-slate-50"
@@ -33,7 +46,7 @@
         xmlns="http://www.w3.org/2000/svg"
         width="48"
         height="48"
-        viewBox="0 B   24 24"
+        viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
         stroke-width="1.5"
@@ -54,148 +67,152 @@
       </p>
     </div>
 
-    <!-- Container da Pasta de Arquivos (Visível apenas em Desktop) -->
-    <main class="hidden md:flex relative w-screen h-screen flex-col">
-      <!-- Área dos Arquivos Empilhados -->
-      <div class="relative flex-grow pt-16 xl:px-[20rem] lg:px-52 md:px-32">
-        <!-- Lista de arquivos (sketches) -->
-        <ul class="relative w-full h-full">
-          <!-- Linha da "capa" da pasta -->
-          <!-- <div class="absolute w-full top-6 h-px bg-slate-400"></div> -->
-
-          <!-- ARQUIVO 03 -->
-          <li class="">
-            <a
-              href="#"
-              class="group absolute bottom-0 w-full top-14 transition-transform duration-300 ease-in-out hover:-translate-y-12 bg-[#F5F5F5] border-2 border-b-0 border-black rounded-t-xl"
-            >
-              <!-- Aba do arquivo -->
-              <div
-                class="absolute l top-0 xl:right-[17rem] md:ml-8 transform -translate-y-full px-3 py-1.5 border-2 border-b-0 border-black rounded-t-md bg-[#F5F5F5]"
-              >
-                <span
-                  class="text-xs md:text-sm font-medium flex items-center gap-3"
-                >
-                  <span class="text-slate-500">03</span>
-                  <span
-                    class="text-[#434343] font-semibold group-hover:line-through"
-                    >Noise.3D</span
-                  >
-                </span>
-              </div>
-              <!-- Descrição oculta -->
-              <div
-                class="mt-3 ml-8 xl:mr-[17rem] md:mr-8 xl:text-right md:text-left opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100 bg-[#F5F5F5]"
-              >
-                <p class="text-md text-[#434343]">Em breve...</p>
-              </div>
-            </a>
-          </li>
-
-          <!-- ARQUIVO (Aba Destacada) -->
-          <li class="">
-            <a
-              href="#"
-              class="group absolute bottom-0 w-full top-28 transition-transform duration-300 ease-in-out hover:-translate-y-12 bg-[#F5F5F5] border-2 border-b-0 border-black rounded-t-xl"
-            >
-              <div
-                class="absolute top-0 right-40 transform -translate-x-1/2 -translate-y-full px-3 py-1.5 border-2 border-b-0 border-black rounded-t-md bg-black text-white"
-              >
-                <span
-                  class="text-xs md:text-sm font-medium flex items-center gap-5"
-                >
-                  <span>TT</span>
-                  <span class="group-hover:line-through">Matheus</span>
-                </span>
-              </div>
-              <div
-                class="mt-3 text-right mr-40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100"
-              >
-                <p class="text-md text-[#434343]">Em breve...</p>
-              </div>
-            </a>
-          </li>
-
-          <!-- ARQUIVO 03 -->
-          <li class="">
-            <a
-              href="./sketches/sketch02/dist/sketch02Funcional.html"
-              class="group absolute bottom-0 w-full top-40 transition-transform duration-300 ease-in-out hover:-translate-y-12 bg-[#F5F5F5] border-2 border-b-0 border-black rounded-t-xl"
-            >
-              <div
-                class="absolute top-0 right-8 md:right-16 transform -translate-y-full px-3 py-1.5 border-2 border-b-0 border-black rounded-t-md bg-[#F5F5F5]"
-              >
-                <span
-                  class="text-xs md:text-sm font-medium flex items-center gap-3"
-                >
-                  <span class="text-slate-500">02</span>
-                  <span class="text-[#434343] group-hover:line-through"
-                    >Sketch_02</span
-                  >
-                </span>
-              </div>
-              <div
-                class="mt-3 mr-8 md:mr-16 text-right opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100"
-              >
-                <p class="text-md text-[#434343]">Noise/ Ruído.</p>
-              </div>
-            </a>
-          </li>
-
-          <!-- ARQUIVO 01 -->
-          <li class="">
-            <a
-              href="./sketches/sketch01/dist/sketch01Funcional.html"
-              class="group absolute bottom-0 w-full top-52 transition-transform duration-300 ease-in-out hover:-translate-y-12 bg-[#F5F5F5] border-2 border-b-0 border-black rounded-t-xl"
-            >
-              <div
-                class="absolute top-0 xl:right-48 md:ml-16 transform -translate-y-full px-3 py-1.5 border-2 border-b-0 border-black rounded-t-md bg-[#F5F5F5]"
-              >
-                <span
-                  class="text-xs md:text-sm font-medium flex items-center gap-3"
-                >
-                  <span class="text-slate-500">01</span>
-                  <span class="text-[#434343] group-hover:line-through"
-                    >sketch_01</span
-                  >
-                </span>
-              </div>
-              <div
-                class="mt-3 ml-8 md:ml-16 md:mr-8 xl:mr-48 xl:text-right md:text-left opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-100"
-              >
-                <p class="text-md text-[#434343]">
-                  Elastic agentes / Agentes elásticos.
-                </p>
-              </div>
-            </a>
-          </li>
-
-          <!-- CAPA DA PASTA -->
-          <li
-            class="group absolute bottom-0 w-full top-[16rem] bg-[#F5F5F5] border-2 border-b-0 border-black"
+    <!-- Container da Mesa de Trabalho (Visível apenas em Desktop) -->
+    <main class="hidden md:block relative w-screen h-screen">
+      <!-- Linhas do Cursor (Crosshair) -->
+      <div
+        id="cursor-x"
+        class="fixed top-0 h-px bg-black/20 pointer-events-none"
+        style="left: 0; right: 0; z-index: 9999"
+      ></div>
+      <div
+        id="cursor-y"
+        class="fixed left-0 w-px bg-black/20 pointer-events-none"
+        style="top: 0; bottom: 0; z-index: 9999"
+      ></div>
+      <!-- ARQUIVO 01 -->
+      <div
+        class="draggable-file absolute w-[16rem] bg-white border-2 border-black rounded-lg shadow-lg transition-transform duration-200 ease-in-out pt-4"
+      >
+        <!-- Aba do Arquivo -->
+        <div
+          class="absolute top-0 -translate-y-full left-4 px-3 py-1 bg-white border-2 border-b-0 border-black rounded-t-md font-bold flex items-center gap-3"
+        >
+          <span class="text-slate-500">01</span>
+          <span>sketch_01</span>
+        </div>
+        <!-- Conteúdo -->
+        <div class="p-3">
+          <p class="text-sm lg:text-base mb-2">
+            Elastic agentes / Agentes elásticos.
+          </p>
+          <a
+            href="./sketches/sketch01/dist/sketch01Funcional.html"
+            class="text-sm lg:text-base font-semibold hover:line-through"
+            >Abrir Sketch &rarr;</a
           >
-            <div
-              class="absolute left-0 h-full w-28 flex items-center justify-center"
-            >
-              <h1
-                class="xl:text-6xl lg:text-6xl md:text-5xl text-[#434343] font-extrabold line-through -rotate-90 whitespace-nowrap"
-              >
-                PLAYGROUND
-              </h1>
-            </div>
-            <p
-              class="text-end mt-20 px-5 text-[#434343] text-lg lg:text-base md:text-sm"
-            >
-              website experimental de estudos de design e front-end do Matheus
-            </p>
-            <p
-              class="text-end px-5 text-[#434343] text-lg lg:text-base md:text-sm"
-            >
-              Matheus' experimental website for design and front-end studies
-            </p>
-          </li>
-        </ul>
+        </div>
+      </div>
+
+      <!-- ARQUIVO 02 -->
+      <div
+        class="draggable-file absolute w-[16rem] bg-white border-2 border-black rounded-lg shadow-lg transition-transform duration-200 ease-in-out pt-4"
+      >
+        <!-- Aba do Arquivo -->
+        <div
+          class="absolute top-0 -translate-y-full left-4 px-3 py-1 bg-white border-2 border-b-0 border-black rounded-t-md font-bold flex items-center gap-3"
+        >
+          <span class="text-slate-400">02</span>
+          <span>Sketch_02</span>
+        </div>
+        <!-- Conteúdo -->
+        <div class="p-3">
+          <p class="text-sm lg:text-base mb-2">Noise/ Ruído.</p>
+          <a
+            href="./sketches/sketch02/dist/sketch02Funcional.html"
+            class="text-sm lg:text-base font-semibold hover:line-through"
+            >Abrir Sketch &rarr;</a
+          >
+        </div>
+      </div>
+
+      <!-- ARQUIVO 03 -->
+      <div
+        class="draggable-file absolute w-72 lg:w-80 bg-white border-2 border-black rounded-lg shadow-lg transition-transform duration-200 ease-in-out pt-4"
+      >
+        <!-- Aba do Arquivo -->
+        <div
+          class="absolute top-0 -translate-y-full right-4 px-3 py-1 bg-white border-2 border-b-0 border-black rounded-t-md font-bold flex items-center gap-3"
+        >
+          <span class="text-slate-500">03</span>
+          <span>Noise.3D</span>
+        </div>
+        <!-- Conteúdo -->
+        <div class="p-3">
+          <p class="text-sm lg:text-base mb-2">Em breve...</p>
+          <a
+            href="#"
+            class="text-sm lg:text-base font-semibold text-blue-600 hover:underline pointer-events-none opacity-50"
+            >Abrir Sketch &rarr;</a
+          >
+        </div>
+      </div>
+
+      <!-- ARQUIVO TT -->
+      <div
+        class="draggable-file absolute w-[25rem] bg-white border-2 border-black rounded-lg shadow-lg transition-transform duration-200 ease-in-out pt-4"
+      >
+        <!-- Aba do Arquivo -->
+        <div
+          class="absolute top-0 -translate-y-full right-4 px-3 py-1 bg-black text-white border-2 border-b-0 border-black rounded-t-lg font-bold flex items-center gap-3"
+        >
+          <span class="">TT</span>
+          <span>Matheus</span>
+        </div>
+        <!-- Conteúdo -->
+        <div class="p-4 flex flex-col items-start">
+          <img
+            src="./assets/tt_sem_fundo.png"
+            alt="foto Matheus"
+            class="mb-1 ml-2"
+          />
+          <p class="text-sm lg:text-base mb-2 text-justify">
+            Comecei na matemática aplicada, mas logo percebi que minha paixão
+            era programar e transformar problemas em soluções criativas.
+            Trabalhei com front-end, onde juntei técnica e estética para criar
+            interfaces funcionais e cheias de personalidade. Curto misturar a
+            lógica da matemática com projetos criativos, explorando novas formas
+            de unir tecnologia, arte e design. Hoje, estudo design gráfico
+            justamente para levar essa mistura ainda mais longe.
+          </p>
+          <a
+            href="https://www.linkedin.com/in/matheus-araripe/"
+            class="text-sm lg:text-base font-semibold hover:line-through"
+            target="_blank"
+            >Linkedin &rarr;</a
+          >
+        </div>
+      </div>
+      <!-- Imagem Arrastável -->
+      <div
+        class="draggable-file cabeca absolute w-50 h-50 rounded-full transition-transform duration-200 ease-in-out"
+        id="cabeca"
+      >
+        <img
+          src="./assets/cabeca_tt.svg"
+          alt="cabeca Matheus"
+          class="w-full h-full object-cover rounded-full"
+        />
+      </div>
+
+      <!-- Título Fixo -->
+      <div
+        class="absolute bottom-8 right-8 lg:bottom-12 lg:right-12 text-right z-0"
+      >
+        <h1
+          class="text-5xl lg:text-6xl font-extrabold line-through text-slate-300"
+        >
+          PLAYGROUND
+        </h1>
+        <p class="text-slate-400 lg:text-lg m-0 p-0">
+          matheus' experimental studies website
+        </p>
+        <p class="text-slate-400 lg:text-lg m-0 p-0">
+          site de estudos experimentais do matheus
+        </p>
       </div>
     </main>
+
+    <script src="script.js"></script>
   </body>
 </html>
