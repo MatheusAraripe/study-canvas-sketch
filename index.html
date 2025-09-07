@@ -32,7 +32,7 @@
         cursor: grabbing;
       }
       /* Efeito de sombra APENAS para itens que NÃO são a cabeça */
-      .draggable-file.dragging:not(#cabeca) {
+      .draggable-file.dragging:not(.demo) {
         box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
       }
     </style>
@@ -56,19 +56,19 @@
           href="https://www.linkedin.com/in/matheus-araripe/"
           class="text-sm lg:text-base font-semibold hover:line-through mx-1"
           target="_blank"
-          ><img src="./assets/icon_linkedin.svg" alt="linkedin" />
+          ><img src="./assets/icons/icon_linkedin.svg" alt="linkedin" />
         </a>
         <a
           href="https://www.behance.net/matheusararipe"
           class="text-sm lg:text-base font-semibold hover:line-through mx-1"
           target="_blank"
-          ><img src="./assets/icon_be.svg" alt="behance" />
+          ><img src="./assets/icons/icon_be.svg" alt="behance" />
         </a>
         <a
           href="https://github.com/MatheusAraripe"
           class="text-sm lg:text-base font-semibold hover:line-through mx-1"
           target="_blank"
-          ><img src="./assets/icon_git.svg" alt="github" />
+          ><img src="./assets/icons/icon_git.svg" alt="github" />
         </a>
       </div>
     </div>
@@ -214,22 +214,20 @@
       </div>
       <!-- Imagem Arrastável -->
       <div
-        class="draggable-file absolute w-50 h-50 rounded-full transition-transform duration-200 ease-in-out"
-        id="cabeca"
+        class="draggable-file absolute w-50 h-50 rounded-full transition-transform duration-200 ease-in-out demo"
       >
         <img
-          src="./assets/cabeca_tt.svg"
+          src="./assets/demos/cabeca_tt.svg"
           alt="cabeca Matheus"
           class="w-full h-full object-cover rounded-full"
         />
       </div>
-      '
+
       <div
-        class="draggable-file absolute w-[25rem] h-[10rem] transition-transform duration-200 ease-in-out"
-        id="cabeca"
+        class="draggable-file absolute w-[25rem] h-[10rem] transition-transform duration-200 ease-in-out demo"
       >
         <img
-          src="./assets/lettering_tt_sem_fundo.svg"
+          src="./assets/demos/lettering_tt_sem_fundo.svg"
           alt="teteu"
           class="w-full h-full object-cover"
         />
