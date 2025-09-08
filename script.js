@@ -96,3 +96,58 @@ fileElements.forEach((item) => {
   item.addEventListener("mousedown", dragStart);
   item.addEventListener("touchstart", dragStart, { passive: false });
 });
+
+// --- Efeito de Digitação ---
+const typingTextElement = document.getElementById("typing-text");
+const sentences = [
+  "Matheus Araripe",
+  "Teteu",
+  "Designer gráfico",
+  "Desenvolvedor front-end",
+  "Melhor jogador de UNO da história",
+];
+
+let sentenceIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+const typingSpeed = 150;
+const deletingSpeed = 100;
+const delayBetweenSentences = 2000;
+
+function type() {
+  const currentSentence = sentences[sentenceIndex];
+  let displayText = "";
+
+  if (isDeleting) {
+    // Deletando o texto
+    displayText = currentSentence.substring(0, charIndex - 1);
+    charIndex--;
+  } else {
+    // Digitando o texto
+    displayText = currentSentence.substring(0, charIndex + 1);
+    charIndex++;
+  }
+
+  typingTextElement.textContent = displayText;
+  let delay = isDeleting ? deletingSpeed : typingSpeed;
+
+  if (!isDeleting && charIndex === currentSentence.length) {
+    // Pausa quando a frase termina de ser digitada
+    delay = delayBetweenSentences;
+    isDeleting = true;
+  } else if (isDeleting && charIndex === 0) {
+    // Passa para a próxima frase quando termina de apagar
+    isDeleting = false;
+    sentenceIndex = (sentenceIndex + 1) % sentences.length;
+    delay = 500; // Pausa antes de começar a digitar a nova frase
+  }
+
+  setTimeout(type, delay);
+}
+
+// Inicia o efeito quando o conteúdo da página estiver carregado
+document.addEventListener("DOMContentLoaded", function () {
+  if (typingTextElement) {
+    setTimeout(type, 1500); // Inicia a animação após 1.5s
+  }
+});

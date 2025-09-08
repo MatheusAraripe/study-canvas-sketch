@@ -35,6 +35,20 @@
       .draggable-file.dragging:not(.demo) {
         box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
       }
+      /* Animação do cursor piscando */
+      .blinking-cursor {
+        font-weight: 500;
+        animation: blink 1s step-end infinite;
+      }
+      @keyframes blink {
+        from,
+        to {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
     </style>
   </head>
   <body class="text-[#434343] overflow-hidden">
@@ -169,28 +183,27 @@
       >
         <!-- Aba do Arquivo -->
         <div
-          class="absolute top-0 -translate-y-full right-4 px-3 py-1 bg-[#434343] text-white border-[1px] border-b-0 border-black/40 rounded-t-lg font-bold flex items-center gap-3"
+          class="absolute top-0 -translate-y-full right-4 px-3 py-1 bg-[#434343] text-white border-[1px] border-b-0 border-black/40 rounded-t-md font-bold flex items-center gap-3"
         >
           <span class="">TT</span>
-          <span>Matheus</span>
+          <!-- <span>Matheus</span> -->
         </div>
         <!-- Conteúdo -->
         <div class="p-4 flex flex-col items-center">
+          <p class="font-bold text-lg mb-2 text-justify">
+            <span id="typing-text"></span><span class="blinking-cursor">▍</span>
+          </p>
           <img
             src="./assets/tt_sem_fundo.png"
             alt="foto Matheus"
             class="mb-1 hidden lg:block"
           />
           <p class="text-sm lg:text-base mb-2 text-justify">
-            Comecei na matemática aplicada, mas logo percebi que minha paixão
-            era programar e transformar problemas em soluções criativas.
-            Trabalhei com front-end, onde juntei técnica e estética para criar
-            interfaces funcionais e cheias de personalidade. Curto misturar a
-            lógica da matemática com projetos criativos, explorando novas formas
-            de unir tecnologia, arte e design. Hoje, estudo design gráfico
-            justamente para levar essa mistura ainda mais longe.
+            Sou apaixonado por criar soluções funcionais e bonitas. Gosto de
+            misturar lógica, matemática e design para dar vida a projetos
+            criativos que unem tecnologia e arte.
           </p>
-          <div>
+          <div class="mt-2">
             <a
               href="https://www.linkedin.com/in/matheus-araripe/"
               class="text-sm lg:text-base font-semibold hover:line-through mx-2"
