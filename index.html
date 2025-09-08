@@ -37,9 +37,13 @@
         transform: scale(1.05);
         cursor: grabbing;
       }
-      /* Efeito de sombra APENAS para itens que NÃO são a cabeça */
+      /* Efeito de sombra APENAS para itens que NÃO são demos de fotos */
       .draggable-file.dragging:not(.demo) {
         box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+      }
+      /* Sombra verde para o modo escuro ao arrastar */
+      html.dark .draggable-file.dragging:not(.demo) {
+        box-shadow: 0 25px 50px -12px rgba(37, 85, 54, 0.233);
       }
       /* Animação do cursor piscando */
       .blinking-cursor {
@@ -152,7 +156,7 @@
         <div
           class="absolute top-0 -translate-y-full left-4 px-3 py-1 bg-white dark:bg-[#090909] dark:border-[#587363] border-[1px] border-b-0 border-black/40 rounded-t-md font-bold flex items-center gap-3"
         >
-          <span class="text-slate-400">01</span>
+          <span class="text-slate-400 dark:text-[#587363]">01</span>
           <span>Elastic Agentes</span>
         </div>
         <!-- Conteúdo -->
@@ -180,7 +184,7 @@
         <div
           class="absolute top-0 -translate-y-full left-4 px-3 py-1 bg-white dark:bg-[#090909] dark:border-[#587363] border-[1px] border-b-0 border-black/40 rounded-t-md font-bold flex items-center gap-3"
         >
-          <span class="text-slate-400">02</span>
+          <span class="text-slate-400 dark:text-[#587363]">02</span>
           <span>Noise</span>
         </div>
         <!-- Conteúdo -->
@@ -207,7 +211,7 @@
         <div
           class="absolute top-0 -translate-y-full right-4 px-3 py-1 bg-white dark:bg-[#090909] dark:border-[#587363] border-[1px] border-b-0 border-black/40 rounded-t-md font-bold flex items-center gap-3"
         >
-          <span class="text-slate-400">03</span>
+          <span class="text-slate-400 dark:text-[#587363]">03</span>
           <span>Noise.3D</span>
         </div>
         <!-- Conteúdo -->

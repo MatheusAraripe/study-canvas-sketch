@@ -159,12 +159,11 @@ const darkIcon = document.getElementById("theme-icon-dark");
 const body = document.body;
 
 const lightGrid = "radial-gradient(circle, #CBD5E1 1px, transparent 1px)";
-const darkGrid = "radial-gradient(circle, #47556938 1px, transparent 1px)";
+const darkGrid = "radial-gradient(circle, #47694738 1px, transparent 1px)";
 
 const applyTheme = (theme) => {
   if (theme === "dark") {
     document.documentElement.classList.add("dark");
-    // lightIcon.classList.add("hidden");
     darkIcon.classList.add("hidden");
     lightIcon.classList.remove("hidden");
     body.style.backgroundColor = "#000000ff";
