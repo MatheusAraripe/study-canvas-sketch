@@ -151,3 +151,39 @@ document.addEventListener("DOMContentLoaded", function () {
     setTimeout(type, 1500); // Inicia a animação após 1.5s
   }
 });
+
+// --- Modo Escuro ---
+const themeToggle = document.getElementById("theme-toggle");
+const lightIcon = document.getElementById("theme-icon-light");
+const darkIcon = document.getElementById("theme-icon-dark");
+const body = document.body;
+
+const lightGrid = "radial-gradient(circle, #CBD5E1 1px, transparent 1px)";
+const darkGrid = "radial-gradient(circle, #47556938 1px, transparent 1px)";
+
+const applyTheme = (theme) => {
+  if (theme === "dark") {
+    document.documentElement.classList.add("dark");
+    // lightIcon.classList.add("hidden");
+    darkIcon.classList.add("hidden");
+    lightIcon.classList.remove("hidden");
+    body.style.backgroundColor = "#000000ff";
+    body.style.backgroundImage = darkGrid;
+  } else {
+    document.documentElement.classList.remove("dark");
+    lightIcon.classList.add("hidden");
+    darkIcon.classList.remove("hidden");
+    body.style.backgroundColor = "#F5F5F5";
+    body.style.backgroundImage = lightGrid;
+  }
+};
+
+themeToggle.addEventListener("click", () => {
+  const currentTheme =
+    localStorage.getItem("theme") === "dark" ? "light" : "dark";
+  localStorage.setItem("theme", currentTheme);
+  applyTheme(currentTheme);
+});
+
+const savedTheme = localStorage.getItem("theme") || "light";
+applyTheme(savedTheme);

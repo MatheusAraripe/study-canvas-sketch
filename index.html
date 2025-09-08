@@ -11,6 +11,12 @@
       href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
     />
+    <script>
+      // Habilita o modo escuro baseado em classe no Tailwind
+      tailwind.config = {
+        darkMode: "class",
+      };
+    </script>
     <style>
       body {
         font-family: "Inter", sans-serif;
@@ -51,7 +57,7 @@
       }
     </style>
   </head>
-  <body class="text-[#434343] overflow-hidden">
+  <body class="text-[#434343] overflow-hidden dark:text-white">
     <!-- Mensagem para Dispositivos Móveis -->
     <div
       class="md:hidden flex flex-col items-center justify-center h-screen text-center p-6 bg-[#f5f5f5]"
@@ -89,26 +95,64 @@
 
     <!-- Container da Mesa de Trabalho (Visível apenas em Desktop) -->
     <main class="hidden md:block relative w-screen h-screen">
+      <!-- Botão de Tema -->
+      <div class="absolute top-8 right-8 z-50">
+        <button
+          id="theme-toggle"
+          class="p-2 rounded-full text-slate-600 dark:text-[#7DFFAF]"
+        >
+          <svg
+            id="theme-icon-light"
+            class="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            ></path>
+          </svg>
+          <svg
+            id="theme-icon-dark"
+            class="w-6 h-6 hidden"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+            ></path>
+          </svg>
+        </button>
+      </div>
       <!-- Linhas do Cursor (Crosshair) -->
       <div
         id="cursor-x"
-        class="fixed top-0 h-px bg-black/20 pointer-events-none"
+        class="fixed top-0 h-px bg-black/20 dark:bg-[#4f4f4f] pointer-events-none"
         style="left: 0; right: 0; z-index: 9999"
       ></div>
       <div
         id="cursor-y"
-        class="fixed left-0 w-px bg-black/20 pointer-events-none"
+        class="fixed left-0 w-px bg-black/20 dark:bg-[#4f4f4f] pointer-events-none"
         style="top: 0; bottom: 0; z-index: 9999"
       ></div>
       <!-- ARQUIVO 01 -->
       <div
-        class="draggable-file absolute w-[19rem] bg-white border-[1px] border-black/40 rounded-lg shadow-lg transition-transform duration-200 ease-in-out pt-4"
+        class="draggable-file absolute w-[19rem] bg-white dark:bg-[#090909] dark:border-[#587363] border-[1px] border-black/40 rounded-lg shadow-lg transition-transform duration-200 ease-in-out pt-4"
       >
         <!-- Aba do Arquivo -->
         <div
-          class="absolute top-0 -translate-y-full left-4 px-3 py-1 bg-white border-[1px] border-b-0 border-black/40 rounded-t-md font-bold flex items-center gap-3"
+          class="absolute top-0 -translate-y-full left-4 px-3 py-1 bg-white dark:bg-[#090909] dark:border-[#587363] border-[1px] border-b-0 border-black/40 rounded-t-md font-bold flex items-center gap-3"
         >
-          <span class="text-slate-500">01</span>
+          <span class="text-slate-400">01</span>
           <span>Elastic Agentes</span>
         </div>
         <!-- Conteúdo -->
@@ -122,7 +166,7 @@
           </p>
           <a
             href="./sketches/sketch01/dist/sketch01Funcional.html"
-            class="text-sm lg:text-base font-semibold hover:line-through"
+            class="text-sm lg:text-base font-semibold hover:line-through dark:text-[#7DFFAF]"
             >Abrir Sketch &rarr;</a
           >
         </div>
@@ -130,11 +174,11 @@
 
       <!-- ARQUIVO 02 -->
       <div
-        class="draggable-file absolute w-[16rem] bg-white border-[1px] border-black/40 rounded-lg shadow-lg transition-transform duration-200 ease-in-out pt-4"
+        class="draggable-file absolute w-[16rem] bg-white border-[1px] dark:bg-[#090909] dark:border-[#587363] border-black/40 rounded-lg shadow-lg transition-transform duration-200 ease-in-out pt-4"
       >
         <!-- Aba do Arquivo -->
         <div
-          class="absolute top-0 -translate-y-full left-4 px-3 py-1 bg-white border-[1px] border-b-0 border-black/40 rounded-t-md font-bold flex items-center gap-3"
+          class="absolute top-0 -translate-y-full left-4 px-3 py-1 bg-white dark:bg-[#090909] dark:border-[#587363] border-[1px] border-b-0 border-black/40 rounded-t-md font-bold flex items-center gap-3"
         >
           <span class="text-slate-400">02</span>
           <span>Noise</span>
@@ -149,7 +193,7 @@
           </p>
           <a
             href="./sketches/sketch02/dist/sketch02Funcional.html"
-            class="text-sm lg:text-base font-semibold hover:line-through"
+            class="text-sm lg:text-base font-semibold hover:line-through dark:text-[#7DFFAF]"
             >Abrir Sketch &rarr;</a
           >
         </div>
@@ -157,13 +201,13 @@
 
       <!-- ARQUIVO 03 -->
       <div
-        class="draggable-file absolute w-72 lg:w-80 bg-white border-[1px] border-black/40 rounded-lg shadow-lg transition-transform duration-200 ease-in-out pt-4"
+        class="draggable-file absolute w-72 lg:w-80 bg-white dark:bg-[#090909] dark:border-[#587363] border-[1px] border-black/40 rounded-lg shadow-lg transition-transform duration-200 ease-in-out pt-4"
       >
         <!-- Aba do Arquivo -->
         <div
-          class="absolute top-0 -translate-y-full right-4 px-3 py-1 bg-white border-[1px] border-b-0 border-black/40 rounded-t-md font-bold flex items-center gap-3"
+          class="absolute top-0 -translate-y-full right-4 px-3 py-1 bg-white dark:bg-[#090909] dark:border-[#587363] border-[1px] border-b-0 border-black/40 rounded-t-md font-bold flex items-center gap-3"
         >
-          <span class="text-slate-500">03</span>
+          <span class="text-slate-400">03</span>
           <span>Noise.3D</span>
         </div>
         <!-- Conteúdo -->
@@ -179,11 +223,11 @@
 
       <!-- ARQUIVO TT -->
       <div
-        class="draggable-file absolute w-[24rem] bg-white border-[1px] border-black/40 rounded-lg shadow-lg transition-transform duration-200 ease-in-out pt-4"
+        class="draggable-file absolute w-[24rem] bg-white dark:bg-[#090909] dark:border-[#587363] border-[1px] border-black/40 rounded-md shadow-lg transition-transform duration-200 ease-in-out pt-4"
       >
         <!-- Aba do Arquivo -->
         <div
-          class="absolute top-0 -translate-y-full right-4 px-3 py-1 bg-[#434343] text-white border-[1px] border-b-0 border-black/40 rounded-t-md font-bold flex items-center gap-3"
+          class="absolute top-0 -translate-y-full right-4 px-3 py-1 bg-[#434343] dark:bg-[#7DFFAF] dark:border-[#587363] dark:text-black text-white border-[1px] border-b-0 border-black/40 rounded-t-md font-bold flex items-center gap-3"
         >
           <span class="">TT</span>
           <!-- <span>Matheus</span> -->
@@ -203,7 +247,7 @@
             misturar lógica, matemática e design para dar vida a projetos
             criativos que unem tecnologia e arte.
           </p>
-          <div class="mt-2">
+          <div class="mt-2 dark:text-[#7DFFAF]">
             <a
               href="https://www.linkedin.com/in/matheus-araripe/"
               class="text-sm lg:text-base font-semibold hover:line-through mx-2"
@@ -251,14 +295,14 @@
         class="absolute bottom-8 right-8 lg:bottom-12 lg:right-12 text-right z-0"
       >
         <h1
-          class="text-5xl lg:text-7xl font-extrabold line-through text-slate-300"
+          class="text-5xl lg:text-7xl dark:text-[#1f2923] font-extrabold line-through text-slate-300"
         >
           PLAYGROUND
         </h1>
-        <p class="text-slate-400 lg:text-lg m-0 p-0">
+        <p class="text-slate-400 dark:text-[#587363] lg:text-lg m-0 p-0">
           site de estudos experimentais do matheus
         </p>
-        <p class="text-slate-400 lg:text-lg m-0 p-0">
+        <p class="text-slate-400 dark:text-[#587363] lg:text-lg m-0 p-0">
           matheus' experimental studies website
         </p>
       </div>
