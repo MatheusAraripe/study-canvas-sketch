@@ -104,7 +104,7 @@ const sentences = [
   "Teteu",
   "Designer gráfico",
   "Desenvolvedor front-end",
-  "Melhor jogador de UNO da história",
+  "Mago do truco",
 ];
 
 let sentenceIndex = 0;
