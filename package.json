@@ -8,16 +8,22 @@
     "dev:sketch01": "canvas-sketch sketches/sketch01/sketch01Funcional.js --open --html=sketches/sketch01/index.html",
     "build:sketch01": "canvas-sketch sketches/sketch01/sketch01Funcional.js --build --html=sketches/sketch01/index.html --dir=sketches/sketch01/dist",
     "dev:sketch02": "canvas-sketch sketches/sketch02/sketch02Funcional.js --open --html=sketches/sketch02/index.html",
-    "build:sketch02": "canvas-sketch sketches/sketch02/sketch02Funcional.js --build --html=sketches/sketch02/index.html --dir=sketches/sketch02/dist"
+    "build:sketch02": "canvas-sketch sketches/sketch02/sketch02Funcional.js --build --html=sketches/sketch02/index.html --dir=sketches/sketch02/dist",
+    "dev:sketch03": "vite sketches/sketch03",
+    "build:sketch03": "vite build sketches/sketch03 --outDir sketches/sketch03/dist"
   },
   "keywords": [],
-  "author": "",
+  "author": "Matheus de Araripe Lopes Corrêa",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
     "canvas-sketch": "^0.7.7",
     "canvas-sketch-util": "^1.10.0",
+    "postprocessing": "^6.37.8",
     "three": "^0.180.0",
     "tweakpane": "^3.1.10"
+  },
+  "devDependencies": {
+    "vite": "^7.1.5"
   }
 }
