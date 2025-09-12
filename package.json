@@ -10,7 +10,7 @@
     "dev:sketch02": "canvas-sketch sketches/sketch02/sketch02Funcional.js --open --html=sketches/sketch02/index.html",
     "build:sketch02": "canvas-sketch sketches/sketch02/sketch02Funcional.js --build --html=sketches/sketch02/index.html --dir=sketches/sketch02/dist",
     "dev:sketch03": "vite sketches/sketch03",
-    "build:sketch03": "vite build sketches/sketch03 --outDir sketches/sketch03/dist"
+    "build:sketch03": "vite build sketches/sketch03 --base=./ --outDir dist"
   },
   "keywords": [],
   "author": "Matheus de Araripe Lopes Corrêa",
