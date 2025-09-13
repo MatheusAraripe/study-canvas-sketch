@@ -156,10 +156,14 @@ document.addEventListener("DOMContentLoaded", function () {
 const themeToggle = document.getElementById("theme-toggle");
 const lightIcon = document.getElementById("theme-icon-light");
 const darkIcon = document.getElementById("theme-icon-dark");
+const themeImage = document.getElementById("theme-image");
 const body = document.body;
 
 const lightGrid = "radial-gradient(circle, #CBD5E1 1px, transparent 1px)";
 const darkGrid = "radial-gradient(circle, #47694738 1px, transparent 1px)";
+
+const lightImageSrc = "./assets/demos/tt_heatmap.jpg";
+const darkImageSrc = "./assets/demos/tt_heatmap2_neg.jpg";
 
 const applyTheme = (theme) => {
   if (theme === "dark") {
@@ -168,12 +172,14 @@ const applyTheme = (theme) => {
     lightIcon.classList.remove("hidden");
     body.style.backgroundColor = "#000000ff";
     body.style.backgroundImage = darkGrid;
+    if (themeImage) themeImage.src = darkImageSrc;
   } else {
     document.documentElement.classList.remove("dark");
     lightIcon.classList.add("hidden");
     darkIcon.classList.remove("hidden");
     body.style.backgroundColor = "#F5F5F5";
     body.style.backgroundImage = lightGrid;
+    if (themeImage) themeImage.src = lightImageSrc;
   }
 };
 
