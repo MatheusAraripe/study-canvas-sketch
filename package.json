@@ -10,7 +10,9 @@
     "dev:sketch02": "canvas-sketch sketches/sketch02/sketch02Funcional.js --open --html=sketches/sketch02/index.html",
     "build:sketch02": "canvas-sketch sketches/sketch02/sketch02Funcional.js --build --html=sketches/sketch02/index.html --dir=sketches/sketch02/dist",
     "dev:sketch03": "vite sketches/sketch03",
-    "build:sketch03": "vite build sketches/sketch03 --base=./ --outDir dist"
+    "build:sketch03": "vite build sketches/sketch03 --base=./ --outDir dist",
+    "dev:sketch04": "canvas-sketch sketches/sketch04/src/sketch04.js --open --html=sketches/sketch04/src/index.html",
+    "build:sketch04": "canvas-sketch sketches/sketch04/src/sketch04.js --build --html=sketches/sketch04/src/index.html --dir=sketches/sketch04/dist"
   },
   "keywords": [],
   "author": "Matheus de Araripe Lopes Corrêa",
@@ -19,6 +21,7 @@
   "dependencies": {
     "canvas-sketch": "^0.7.7",
     "canvas-sketch-util": "^1.10.0",
+    "eases": "^1.0.8",
     "postprocessing": "^6.37.8",
     "three": "^0.180.0",
     "tweakpane": "^3.1.10"
