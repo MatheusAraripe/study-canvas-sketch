@@ -1,0 +1,45 @@
+body {
+  font-family: "Inter", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  user-select: none; /* Impede a seleção de texto durante o arraste */
+
+  /* Fundo de "quadro branco" com grid pontilhado */
+  background-color: #f5f5f5;
+  background-image: radial-gradient(circle, #cbd5e1 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+#typing-text {
+  font-family: "Fira Code", monospace;
+  font-optical-sizing: auto;
+}
+.draggable-file {
+  cursor: grab;
+}
+/* Efeito de arrastar para TODOS os itens (escala e cursor) */
+.draggable-file.dragging {
+  transform: scale(1.05);
+  cursor: grabbing;
+}
+/* Efeito de sombra APENAS para itens que NÃO são demos de fotos */
+.draggable-file.dragging:not(.demo) {
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+/* Sombra verde para o modo escuro ao arrastar */
+html.dark .draggable-file.dragging:not(.demo) {
+  box-shadow: 0 25px 50px -12px rgba(37, 85, 54, 0.233);
+}
+/* Animação do cursor piscando */
+.blinking-cursor {
+  font-weight: 500;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink {
+  from,
+  to {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}

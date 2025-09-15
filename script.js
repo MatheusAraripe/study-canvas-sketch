@@ -97,6 +97,38 @@ fileElements.forEach((item) => {
   item.addEventListener("touchstart", dragStart, { passive: false });
 });
 
+const slides = document.querySelectorAll(".sketch-slide");
+const prevButton = document.getElementById("prev-sketch");
+const nextButton = document.getElementById("next-sketch");
+const slideCounter = document.getElementById("slide-counter");
+
+if (slides.length > 0) {
+  let currentSlide = 0;
+  const totalSlides = slides.length;
+
+  const showSlide = (index) => {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle("hidden", i !== index);
+    });
+    if (slideCounter) {
+      slideCounter.textContent = `${index + 1} / ${totalSlides}`;
+    }
+    currentSlide = index;
+  };
+
+  nextButton.addEventListener("click", () => {
+    const nextIndex = (currentSlide + 1) % totalSlides;
+    showSlide(nextIndex);
+  });
+
+  prevButton.addEventListener("click", () => {
+    const prevIndex = (currentSlide - 1 + totalSlides) % totalSlides;
+    showSlide(prevIndex);
+  });
+
+  showSlide(0); // Initialize
+}
+
 // --- Efeito de Digitação ---
 const typingTextElement = document.getElementById("typing-text");
 const sentences = [
