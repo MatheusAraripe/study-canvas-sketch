@@ -29,6 +29,10 @@ body {
 html.dark .draggable-file.dragging:not(.demo) {
   box-shadow: 0 25px 50px -12px rgba(37, 85, 54, 0.233);
 }
+/* Sombra verde para o modo escuro ao arrastar */
+html.dark .draggable-file.dragging.custom_pink {
+  box-shadow: 0 25px 50px -12px rgba(206, 85, 170, 0.548);
+}
 /* Animação do cursor piscando */
 .blinking-cursor {
   font-weight: 500;
