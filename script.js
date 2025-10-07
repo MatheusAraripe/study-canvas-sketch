@@ -139,6 +139,12 @@ const sentences = [
   "Mago do truco",
 ];
 
+// const sentences = [
+//   "Designer gráfico e Desenvolvedor front-end",
+//   "Sou apaixonado por criar soluções funcionais e bonitas.",
+//   "Gosto de misturar lógica, matemática e design para dar vida a projetos criativos que unem tecnologia e arte.",
+// ];
+
 let sentenceIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
