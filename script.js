@@ -131,25 +131,25 @@ if (slides.length > 0) {
 
 // --- Efeito de Digitação ---
 const typingTextElement = document.getElementById("typing-text");
-const sentences = [
-  "Matheus Araripe",
-  "Teteu",
-  "Designer gráfico",
-  "Desenvolvedor front-end",
-  "Mago do truco",
-];
-
 // const sentences = [
-//   "Designer gráfico e Desenvolvedor front-end",
-//   "Sou apaixonado por criar soluções funcionais e bonitas.",
-//   "Gosto de misturar lógica, matemática e design para dar vida a projetos criativos que unem tecnologia e arte.",
+//   "Sou apaixonado por criar soluções funcionais e bonitas",
+//   "Gosto de misturar matemática e design para dar vida a projetos criativos que unem tecnologia e arte",
+//   // "Designer gráfico",
+//   // "Desenvolvedor front-end",
+//   // "Mago do truco",
 // ];
+
+const sentences = [
+  "Designer gráfico e Desenvolvedor front-end.",
+  "Sou apaixonado por criar soluções funcionais e bonitas.",
+  "Gosto de misturar matemática e design para dar vida a projetos criativos que unem tecnologia e arte.",
+];
 
 let sentenceIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
-const typingSpeed = 150;
-const deletingSpeed = 100;
+const typingSpeed = 190;
+const deletingSpeed = 160;
 const delayBetweenSentences = 2000;
 
 function type() {

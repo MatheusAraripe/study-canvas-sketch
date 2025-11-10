@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="./assets/style/style.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="icon" type="image/png" href="./assets/icons/fav.png" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
       rel="stylesheet"
@@ -211,7 +212,7 @@
 
       <!-- ARQUIVO TT -->
       <div
-        class="draggable-file absolute w-[20rem] bg-white dark:bg-[#090909] dark:border-[#587363] border-[1px] border-black/40 rounded-md shadow-lg transition-transform duration-200 ease-in-out pt-4"
+        class="draggable-file absolute w-[20rem] h-[11rem] bg-white dark:bg-[#090909] dark:border-[#587363] border-[1px] border-black/40 rounded-md shadow-lg transition-transform duration-200 ease-in-out pt-4"
       >
         <!-- Aba do Arquivo -->
         <div
@@ -221,20 +222,12 @@
         </div>
         <!-- Conteúdo -->
         <div class="p-4 flex flex-col items-center">
-          <p class="font-bold text-lg mb-2 text-justify">
+          <p class="text-sm lg:text-base mb-2 text-justify">
             <span id="typing-text"></span><span class="blinking-cursor">▍</span>
           </p>
-          <!-- <img
-            src="./assets/img/foteca_heatmap_SF_resize.png"
-            alt="foto Matheus"
-            class="mb-1 hidden lg:block h-[14rem]"
-          /> -->
-          <p class="text-sm lg:text-base mb-2 text-justify">
-            Sou apaixonado por criar soluções funcionais e bonitas. Gosto de
-            misturar lógica, matemática e design para dar vida a projetos
-            criativos que unem tecnologia e arte.
-          </p>
-          <div class="mt-2 dark:text-[#7DFFAF]">
+          <div
+            class="absolute bottom-0 w-full flex justify-between items-center p-2 dark:text-[#7DFFAF]"
+          >
             <a
               href="https://www.linkedin.com/in/matheus-araripe/"
               class="text-sm lg:text-base font-semibold hover:line-through mx-2"
@@ -280,17 +273,43 @@
       >
         <img
           src="./assets/demos/clava.gif"
-          alt="logo tt"
+          alt="clava.gif"
+          class="w-full h-full object-cover rounded-md"
+        />
+      </div>
+      <div
+        class="draggable-file absolute w-[16rem] h-[16rem] rounded-md dark:border-[#587363] transition-transform duration-200 ease-in-out custom_white"
+      >
+        <img
+          src="./assets/demos/eye_dd.jpg"
+          alt="eye_dd.jpg"
+          class="w-full h-full object-cover rounded-md"
+        />
+      </div>
+      <div
+        class="draggable-file absolute w-[20rem] h-[12rem] rounded-md dark:border-[#587363] transition-transform duration-200 ease-in-out custom_orange"
+      >
+        <img
+          src="./assets/demos/btf.jpg"
+          alt="btf.jpg"
+          class="w-full h-full object-cover rounded-md"
+        />
+      </div>
+      <div
+        class="draggable-file absolute rounded-md h-[16rem] w-[25rem] dark:border-[#587363] transition-transform duration-200 ease-in-out custom_blue"
+      >
+        <img
+          src="./assets/demos/din.gif"
+          alt="din.gif"
           class="w-full h-full object-cover rounded-md"
         />
       </div>
 
       <!-- playlist -->
-      <div
+      <!-- <div
         id="sketch-carousel-window"
         class="draggable-file flex flex-col items-center absolute w-[12rem] h-[16rem] bg-white dark:bg-[#090909] dark:border-[#587363] border-[1px] border-black/40 rounded-md shadow-lg transition-transform duration-200 ease-in-out p-2"
       >
-        <!-- Aba do Arquivo -->
         <div
           class="absolute top-0 -translate-y-full left-4 px-3 py-1 bg-white dark:bg-[#090909] dark:border-[#587363] border-[1px] border-b-0 border-black/40 rounded-t-md font-bold flex items-center gap-3"
         >
@@ -311,7 +330,7 @@
             >BOOMBAP</a
           >
         </p>
-      </div>
+      </div> -->
       <!-- lettering tt -->
       <div
         class="draggable-file absolute w-[25rem] h-[10rem] transition-transform duration-200 ease-in-out demo"

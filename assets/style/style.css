@@ -33,6 +33,18 @@ html.dark .draggable-file.dragging:not(.demo) {
 html.dark .draggable-file.dragging.custom_pink {
   box-shadow: 0 25px 50px -12px rgba(206, 85, 170, 0.548);
 }
+html.dark .draggable-file.dragging.custom_white {
+  /* box-shadow: 0 25px 50px -12px rgba(204, 204, 204, 0.548); */
+  box-shadow: rgba(184, 184, 184, 0.274) 0px 48px 100px 0px;
+}
+html.dark .draggable-file.dragging.custom_orange {
+  /* box-shadow: 0 25px 50px -12px rgba(204, 204, 204, 0.548); */
+  box-shadow: rgba(172, 120, 72, 0.178) 0px 48px 100px 0px;
+}
+html.dark .draggable-file.dragging.custom_blue {
+  /* box-shadow: 0 25px 50px -12px rgba(204, 204, 204, 0.548); */
+  box-shadow: rgba(102, 243, 220, 0.178) 0px 48px 100px 0px;
+}
 /* Animação do cursor piscando */
 .blinking-cursor {
   font-weight: 500;
